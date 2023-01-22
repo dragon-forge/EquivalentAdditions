@@ -1,0 +1,23 @@
+# Mod Info
+mod_id=equivadds
+archive_name=EquivalentAdditions
+mod_name=EquivalentAdditions
+mod_version=19.1.0
+
+# Maven Info
+maven_group=org.zeith.equivadds
+hl_version=19.3.51
+
+# MC Info
+mc_version=1.19.2
+forge_version=43.2.0
+mc_user=Zeitheron,63fa4c485b5640809727d5d59663e603
+
+# Misc Info
+java=17
+
+# Project ID on CurseForge
+cf_project=303583
+
+# alpha, beta, release
+release_type=release
