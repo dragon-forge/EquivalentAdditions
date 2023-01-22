@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[43,)"
-issueTrackerURL = "https://gitlab.com/DragonForge/<NAME>/issues"
+issueTrackerURL = "https://github.com/dragon-forge/EquivalentAdditions/issues"
 license = "All rights reserved"
 
 [[mods]]
@@ -9,12 +9,11 @@ version = "${file.jarVersion}"
 displayName = "Equivalent Additions"
 updateJSONURL = "http://h.zeith.org/api/fmluc/303583"
 displayURL = "http://dccg.herokuapp.com/api/fmlhp/303583"
-logoFile = "equivadds.png" #optional
-credits = "None" #optional
-authors = "Zeitheron" #optional
+logoFile = "equivadds.png"
+credits = "None"
+authors = "Zeitheron"
 description = '''
-Multi-line description
-of the mod!
+An addon to ProjectE that adds more content & expands it with OP stuff!
 '''
 
 [[dependencies.equivadds]]
@@ -23,15 +22,17 @@ mandatory = true
 versionRange = "[43,)"
 ordering = "NONE" # NONE/BEFORE/AFTER
 side = "BOTH"
+
 [[dependencies.equivadds]]
 modId = "minecraft"
 mandatory = true
 versionRange = "[1.19.2,1.20)"
 ordering = "NONE"
 side = "BOTH"
+
 [[dependencies.equivadds]]
 modId = "hammerlib"
 mandatory = true
-versionRange = "[19.3.51,)"
+versionRange = "[19.3.53,)"
 ordering = "NONE"
 side = "BOTH"

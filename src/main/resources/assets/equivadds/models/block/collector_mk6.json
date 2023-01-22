@@ -1,0 +1,6 @@
+{
+  "parent": "projecte:block/collector_mk1",
+  "textures": {
+    "top": "equivadds:block/collectors/top_6"
+  }
+}

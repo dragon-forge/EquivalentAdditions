@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "equivadds:block/collector_mk4",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "equivadds:block/collector_mk4"
+    },
+    "facing=south": {
+      "model": "equivadds:block/collector_mk4",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "equivadds:block/collector_mk4",
+      "y": 270
+    }
+  }
+}

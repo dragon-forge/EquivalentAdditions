@@ -1,0 +1,6 @@
+{
+  "parent": "equivadds:item/relay_array/base",
+  "textures": {
+    "top": "equivadds:block/relays/top_4"
+  }
+}

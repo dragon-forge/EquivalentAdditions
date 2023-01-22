@@ -1,0 +1,6 @@
+{
+	"parent": "equivadds:block/emc_flowers/base",
+	"textures": {
+		"top": "projecte:block/collectors/top_3"
+	}
+}

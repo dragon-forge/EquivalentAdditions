@@ -1,0 +1,6 @@
+{
+  "parent": "projecte:block/relay_mk1",
+  "textures": {
+    "top": "equivadds:block/relays/top_7"
+  }
+}

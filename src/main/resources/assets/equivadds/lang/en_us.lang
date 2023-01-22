@@ -1,0 +1,60 @@
+## English Localization (by Zeitheron)
+
+itemGroup.equivadds=Equivalent Additions
+
+block.equivadds.pipe_emc_mk1=Energy Conduit MK1
+block.equivadds.pipe_emc_mk2=Energy Conduit MK2
+block.equivadds.pipe_emc_mk3=Energy Conduit MK3
+block.equivadds.pipe_emc_mk4=Energy Conduit MK4
+block.equivadds.zeitheron_fuel_block=Zeitheron Fuel Block
+block.equivadds.mysterium_fuel_block=Mysterium Fuel Block
+block.equivadds.citrinium_fuel_block=Citrinium Fuel Block
+block.equivadds.verdanite_fuel_block=Verdanite Fuel Block
+block.equivadds.blue_matter_block=Blue Matter Block
+block.equivadds.purple_matter_block=Blue Matter Block
+block.equivadds.orange_matter_block=Orange Matter Block
+block.equivadds.green_matter_block=Green Matter Block
+block.equivadds.collector_mk4=Energy Collector MK4
+block.equivadds.collector_mk5=Energy Collector MK5
+block.equivadds.collector_mk6=Energy Collector MK6
+block.equivadds.collector_mk7=Energy Collector MK7
+block.equivadds.relay_mk4=Anti-Matter Relay MK4
+block.equivadds.relay_mk5=Anti-Matter Relay MK5
+block.equivadds.relay_mk6=Anti-Matter Relay MK6
+block.equivadds.relay_mk7=Anti-Matter Relay MK7
+block.equivadds.emc_flowers.mk1=EMC Flower MK1
+block.equivadds.emc_flowers.mk2=EMC Flower MK2
+block.equivadds.emc_flowers.mk3=EMC Flower MK3
+block.equivadds.emc_flowers.mk4=EMC Flower MK4
+block.equivadds.emc_flowers.mk5=EMC Flower MK5
+block.equivadds.emc_flowers.mk6=EMC Flower MK6
+block.equivadds.emc_flowers.mk7=EMC Flower MK7
+block.equivadds.emc_proxy=EMC Proxy
+
+item.equivadds.blue_matter=Blue Matter
+item.equivadds.purple_matter=Purple Matter
+item.equivadds.green_matter=Green Matter
+item.equivadds.orange_matter=Orange Matter
+item.equivadds.zeitheron_fuel=Zeitheron Fuel
+item.equivadds.mysterium_fuel=Mysterium Fuel
+item.equivadds.citrinium_fuel=Citrinium Fuel
+item.equivadds.verdanite_fuel=Verdanite Fuel
+item.equivadds.collector_array.mk1=Collector Array MK1
+item.equivadds.collector_array.mk2=Collector Array MK2
+item.equivadds.collector_array.mk3=Collector Array MK3
+item.equivadds.collector_array.mk4=Collector Array MK4
+item.equivadds.collector_array.mk5=Collector Array MK5
+item.equivadds.collector_array.mk6=Collector Array MK6
+item.equivadds.collector_array.mk7=Collector Array MK7
+item.equivadds.relay_array.mk1=Relay Array MK1
+item.equivadds.relay_array.mk2=Relay Array MK2
+item.equivadds.relay_array.mk3=Relay Array MK3
+item.equivadds.relay_array.mk4=Relay Array MK4
+item.equivadds.relay_array.mk5=Relay Array MK5
+item.equivadds.relay_array.mk6=Relay Array MK6
+item.equivadds.relay_array.mk7=Relay Array MK7
+
+tooltip.equivadds.transfer=Transfer
+tooltip.equivadds.stored=Storing %s EMC
+tooltip.equivadds.owner=Owner
+gui.equivadds.emcpt=EMC/tick

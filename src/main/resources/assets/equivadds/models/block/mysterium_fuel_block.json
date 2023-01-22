@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "equivadds:block/mysterium_fuel_block"
+  }
+}

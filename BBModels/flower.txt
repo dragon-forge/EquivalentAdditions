@@ -1,0 +1,28 @@
+public VoxelShape makeShape(){
+	VoxelShape shape = VoxelShapes.empty();
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.0625, 0.40625, 0.59375, 0.25, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.25, 0.59375, 0.59375, 0.4375, 0.78125), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.25, 0.21875, 0.59375, 0.4375, 0.40625), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.21875, 0.25, 0.40625, 0.40625, 0.4375, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.59375, 0.25, 0.40625, 0.78125, 0.4375, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.78125, 0.4375, 0.40625, 0.96875, 0.625, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.03125, 0.4375, 0.40625, 0.21875, 0.625, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.4375, 0.03125, 0.59375, 0.625, 0.21875), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.4375, 0.78125, 0.59375, 0.625, 0.96875), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.59375, 0.4375, 0.59375, 0.78125, 0.625, 0.78125), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.21875, 0.4375, 0.59375, 0.40625, 0.625, 0.78125), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.21875, 0.4375, 0.21875, 0.40625, 0.625, 0.40625), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.59375, 0.4375, 0.21875, 0.78125, 0.625, 0.40625), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.625, 0.21875, 0.59375, 0.8125, 0.40625), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.625, 0.59375, 0.59375, 0.8125, 0.78125), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.21875, 0.625, 0.40625, 0.40625, 0.8125, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.59375, 0.625, 0.40625, 0.78125, 0.8125, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.40625, 0.8125, 0.40625, 0.59375, 1, 0.59375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0, 0, 1, 0.0625, 1), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.0625, 0, 1, 0.125, 0.0625), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.0625, 0.9375, 1, 0.125, 1), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0, 0.0625, 0.0625, 0.0625, 0.125, 0.9375), IBooleanFunction.OR);
+	shape = VoxelShapes.join(shape, VoxelShapes.box(0.9375, 0.0625, 0.0625, 1, 0.125, 0.9375), IBooleanFunction.OR);
+
+	return shape;
+}
