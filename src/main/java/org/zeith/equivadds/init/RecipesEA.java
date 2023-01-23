@@ -19,7 +19,8 @@ public class RecipesEA
 	{
 		Object[] fuels = new Object[4];
 		Arrays.fill(fuels, prevTierFuelItem);
-		e.shapeless().result(fuelItem).addAll(fuels).add(PEItems.PHILOSOPHERS_STONE).register();
+		e.shapeless().result(prevTierFuelItem, 4).addAll(PEItems.PHILOSOPHERS_STONE, fuelItem).register();
+		e.shapeless().result(fuelItem).add(PEItems.PHILOSOPHERS_STONE).addAll(fuels).register();
 		e.shapeless().result(fuelItem, 9).add(fuelBlock).register();
 		e.shaped().result(fuelBlock).shape("fff", "fff", "fff").map('f', fuelItem).register();
 	}

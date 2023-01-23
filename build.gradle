@@ -58,6 +58,7 @@ minecraft {
             mods {
                 examplemod {
                     source sourceSets.main
+                    resource sourceSets.main.resources
                 }
             }
         }
@@ -69,6 +70,7 @@ minecraft {
             mods {
                 examplemod {
                     source sourceSets.main
+                    resource sourceSets.main.resources
                 }
             }
         }
@@ -89,7 +91,7 @@ repositories {
 dependencies {
     minecraft "net.minecraftforge:forge:${config.mc_version}-${config.forge_version}"
 
-	implementation "org.zeith.hammerlib:HammerLib-${config.mc_version}:${config.hl_version}:deobf"
+    implementation "org.zeith.hammerlib:HammerLib-${config.mc_version}:${config.hl_version}:deobf"
 
     annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
 

@@ -113,7 +113,7 @@ public class TileEMCFlower
 		for(Direction dir : Direction.values())
 		{
 			BlockPos neighboringPos = worldPosition.relative(dir);
-			//Make sure the neighboring block is loaded as if we are on a chunk border on the edge of loaded chunks this may not be the case
+			// Make sure the neighboring block is loaded as if we are on a chunk border on the edge of loaded chunks this may not be the case
 			if(level.isLoaded(neighboringPos))
 			{
 				BlockEntity neighboringBE = WorldHelper.getBlockEntity(level, neighboringPos);
@@ -121,7 +121,7 @@ public class TileEMCFlower
 				{
 					neighboringBE.getCapability(PECapabilities.EMC_STORAGE_CAPABILITY, dir.getOpposite()).ifPresent(theirEmcStorage ->
 					{
-						//If they are both relays don't add the pairing so as to prevent thrashing
+						// If they are both relays don't add the pairing to prevent thrashing
 						if(theirEmcStorage.insertEmc(1, IEmcStorage.EmcAction.SIMULATE) > 0)
 						{
 							//If they would be wiling to accept any Emc then we consider them to be an "acceptor"
@@ -176,7 +176,11 @@ public class TileEMCFlower
 				.newLine();
 		
 		tip.addText(Component.translatable("tooltip." + EquivalentAdditions.MOD_ID + ".stored",
-				Component.literal(String.format("%,d", Math.round(storage.getStoredEmc()))).withStyle(ChatFormatting.AQUA)
+				Component.literal(String.format("%,d", storage.getStoredEmc())).withStyle(ChatFormatting.AQUA)
+		)).newLine();
+		
+		tip.addText(Component.translatable("tooltip." + EquivalentAdditions.MOD_ID + ".capacity",
+				Component.literal(String.format("%,d", storage.getMaximumEmc())).withStyle(ChatFormatting.AQUA)
 		)).newLine();
 	}
 }

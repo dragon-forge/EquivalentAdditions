@@ -55,5 +55,7 @@ item.equivadds.relay_array.mk7=Relay Array MK7
 
 tooltip.equivadds.transfer=Перемещение
 tooltip.equivadds.stored=В Хранилище %s EMC
+tooltip.equivadds.capacity=Ёмкость: %s EMC
+tooltip.equivadds.stored.cap=В Хранилище %s/%s EMC
 tooltip.equivadds.owner=Владелец
 gui.equivadds.emcpt=ЕМС/тик

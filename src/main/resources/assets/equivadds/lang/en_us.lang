@@ -56,5 +56,7 @@ item.equivadds.relay_array.mk7=Relay Array MK7
 
 tooltip.equivadds.transfer=Transfer
 tooltip.equivadds.stored=Storing %s EMC
+tooltip.equivadds.capacity=Capacity: %s EMC
+tooltip.equivadds.stored.cap=Storing %s/%s EMC
 tooltip.equivadds.owner=Owner
 gui.equivadds.emcpt=EMC/tick
