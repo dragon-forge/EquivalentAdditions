@@ -6,6 +6,11 @@ import appeng.api.storage.cells.StorageCell;
 import appeng.hooks.AEToolItem;
 import appeng.items.AEBaseItem;
 import appeng.util.InteractionUtil;
+import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
+import moze_intel.projecte.api.capabilities.item.IItemEmcHolder;
+import moze_intel.projecte.capability.EmcHolderItemCapabilityWrapper;
+import moze_intel.projecte.capability.ItemCapabilityWrapper;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Inventory;
@@ -14,17 +19,18 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.jetbrains.annotations.*;
 import org.zeith.equivadds.compat.ae2.init.ItemsEAAE2;
 import org.zeith.equivadds.compat.ae2.item.cell.IEmcCellItem;
+import org.zeith.equivadds.compat.ae2.me.EMCKeyType;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 public class EmcCellItem
 		extends AEBaseItem
-		implements IEmcCellItem, AEToolItem
+		implements IEmcCellItem, AEToolItem, IItemEmcHolder
 {
 	private final ItemLike coreItem;
 	private final int totalBytes;
@@ -102,5 +108,47 @@ public class EmcCellItem
 	public void appendHoverText(ItemStack is, @Nullable Level level, List<Component> lines, TooltipFlag tooltipFlag)
 	{
 		this.addCellInformationToTooltip(is, lines);
+	}
+	
+	@Override
+	public @Nullable ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt)
+	{
+		return new ItemCapabilityWrapper(stack, new EmcHolderItemCapabilityWrapper());
+	}
+	
+	// Let ProjectE know about internal EMC stored here.
+	
+	@Override
+	public long insertEmc(@NotNull ItemStack stack, long toInsert, IEmcStorage.EmcAction action)
+	{
+		if(toInsert < 0) return extractEmc(stack, -toInsert, action);
+		return 0L;
+	}
+	
+	@Override
+	public long extractEmc(@NotNull ItemStack stack, long toExtract, IEmcStorage.EmcAction action)
+	{
+		if(toExtract < 0) return insertEmc(stack, -toExtract, action);
+		
+		long storedEmc = getStoredEmc(stack);
+		long toRemove = Math.min(storedEmc, toExtract);
+		if(action.execute())
+			stack.getOrCreateTag().putLong("amount", stack.getOrCreateTag().getLong("amount") - toRemove);
+		
+		return toRemove;
+	}
+	
+	@Override
+	@Range(from = 0, to = Long.MAX_VALUE)
+	public long getStoredEmc(@NotNull ItemStack stack)
+	{
+		return stack.getOrCreateTag().getLong("amount");
+	}
+	
+	@Override
+	@Range(from = 1, to = Long.MAX_VALUE)
+	public long getMaximumEmc(@NotNull ItemStack stack)
+	{
+		return getTotalBytes() * EMCKeyType.TYPE.getAmountPerByte();
 	}
 }

@@ -86,33 +86,43 @@ public class TileCustomRelay
 		return true;
 	}
 	
+	public int getExtraBurnTimes()
+	{
+		return 0;
+	}
+	
 	public static void tickServer(Level level, BlockPos pos, BlockState state, TileCustomRelay relay)
 	{
 		relay.sendEmc();
 		relay.input.compact();
-		ItemStack stack = relay.getBurn();
-		if(!stack.isEmpty())
+		
+		int burnIns = 1 + relay.getExtraBurnTimes();
+		for(int i = 0; i < burnIns; ++i)
 		{
-			Optional<IItemEmcHolder> holderCapability = stack.getCapability(PECapabilities.EMC_HOLDER_ITEM_CAPABILITY).resolve();
-			if(holderCapability.isPresent())
+			ItemStack stack = relay.getBurn();
+			
+			if(!stack.isEmpty())
 			{
-				IItemEmcHolder emcHolder = holderCapability.get();
-				long simulatedVal = relay.forceInsertEmc(emcHolder.extractEmc(stack, relay.chargeRate, EmcAction.SIMULATE), EmcAction.SIMULATE);
-				if(simulatedVal > 0)
+				Optional<IItemEmcHolder> holderCapability = stack.getCapability(PECapabilities.EMC_HOLDER_ITEM_CAPABILITY).resolve();
+				if(holderCapability.isPresent())
 				{
-					relay.forceInsertEmc(emcHolder.extractEmc(stack, simulatedVal, EmcAction.EXECUTE), EmcAction.EXECUTE);
-				}
-			} else
-			{
-				long emcVal = EMCHelper.getEmcSellValue(stack);
-				if(emcVal > 0 && emcVal <= relay.getNeededEmc())
+					IItemEmcHolder emcHolder = holderCapability.get();
+					long simulatedVal = relay.forceInsertEmc(emcHolder.extractEmc(stack, relay.chargeRate, EmcAction.SIMULATE), EmcAction.SIMULATE);
+					if(simulatedVal > 0)
+						relay.forceInsertEmc(emcHolder.extractEmc(stack, simulatedVal, EmcAction.EXECUTE), EmcAction.EXECUTE);
+				} else
 				{
-					relay.forceInsertEmc(emcVal, EmcAction.EXECUTE);
-					relay.getBurn().shrink(1);
-					relay.input.onContentsChanged(0);
+					long emcVal = EMCHelper.getEmcSellValue(stack);
+					if(emcVal > 0 && emcVal <= relay.getNeededEmc())
+					{
+						relay.forceInsertEmc(emcVal, EmcAction.EXECUTE);
+						relay.getBurn().shrink(1);
+						relay.input.onContentsChanged(0);
+					}
 				}
 			}
 		}
+		
 		ItemStack chargeable = relay.getCharging();
 		if(!chargeable.isEmpty() && relay.getStoredEmc() > 0)
 		{

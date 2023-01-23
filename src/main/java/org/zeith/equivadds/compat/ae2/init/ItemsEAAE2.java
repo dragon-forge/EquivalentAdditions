@@ -2,6 +2,7 @@ package org.zeith.equivadds.compat.ae2.init;
 
 import appeng.core.definitions.AEItems;
 import net.minecraft.world.item.Item;
+import org.zeith.equivadds.compat.ae2.crafting.pattern.ItemEMCSynthesisPattern;
 import org.zeith.equivadds.compat.ae2.item.EmcCellItem;
 import org.zeith.equivadds.init.ItemsEA;
 import org.zeith.hammerlib.annotations.RegistryName;
@@ -25,6 +26,9 @@ public interface ItemsEAAE2
 	
 	@RegistryName("emc_storage_cell_256k")
 	EmcCellItem EMC_CELL_256K = new EmcCellItem(ItemsEA.newProperties().stacksTo(1), AEItems.CELL_COMPONENT_256K, 256, 2.5);
+	
+	@RegistryName("emc_synthesis_pattern")
+	ItemEMCSynthesisPattern EMC_SYNTHESIS_PATTERN = new ItemEMCSynthesisPattern(ItemsEA.newProperties().stacksTo(1));
 	
 	static EmcCellItem get(Tier tier)
 	{

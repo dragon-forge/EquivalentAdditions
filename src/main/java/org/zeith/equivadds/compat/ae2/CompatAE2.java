@@ -5,20 +5,30 @@ import appeng.api.behaviors.GenericSlotCapacities;
 import appeng.api.client.StorageCellModels;
 import appeng.api.stacks.AEKeyTypes;
 import appeng.api.storage.StorageCells;
+import appeng.api.upgrades.Upgrades;
+import appeng.blockentity.ClientTickingBlockEntity;
+import appeng.blockentity.ServerTickingBlockEntity;
+import appeng.core.definitions.AEBlocks;
+import appeng.core.definitions.AEItems;
 import appeng.parts.automation.StackWorldBehaviors;
+import moze_intel.projecte.gameObjs.registries.PEBlocks;
 import moze_intel.projecte.gameObjs.registries.PEItems;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.*;
 import org.zeith.api.registry.RegistryMapping;
 import org.zeith.equivadds.EquivalentAdditions;
 import org.zeith.equivadds.compat.CompatEA;
 import org.zeith.equivadds.compat.ae2.client.CompatAE2Client;
+import org.zeith.equivadds.compat.ae2.init.BlocksEAAE2;
 import org.zeith.equivadds.compat.ae2.init.ItemsEAAE2;
 import org.zeith.equivadds.compat.ae2.item.cell.EmcCellHandler;
 import org.zeith.equivadds.compat.ae2.me.*;
+import org.zeith.equivadds.compat.ae2.tile.TileEmcSynthesisChamber;
 import org.zeith.hammerlib.HammerLib;
 import org.zeith.hammerlib.compat.base.BaseCompat;
 import org.zeith.hammerlib.core.adapter.RegistryAdapter;
@@ -37,6 +47,7 @@ public class CompatAE2
 	public void setup(IEventBus bus)
 	{
 		bus.addListener(this::register);
+		bus.addListener(this::commonSetup);
 		
 		StackWorldBehaviors.registerImportStrategy(EMCKeyType.TYPE, EmcImportStrategy::new);
 		StackWorldBehaviors.registerExportStrategy(EMCKeyType.TYPE, EmcExportStrategy::new);
@@ -53,12 +64,30 @@ public class CompatAE2
 		HammerLib.EVENT_BUS.addListener(this::recipes);
 	}
 	
+	public void commonSetup(FMLCommonSetupEvent e)
+	{
+		var entityClass = TileEmcSynthesisChamber.class;
+		
+		BlockEntityTicker<TileEmcSynthesisChamber> serverTicker = null;
+		if(ServerTickingBlockEntity.class.isAssignableFrom(entityClass))
+			serverTicker = (level, pos, state, entity) -> ((ServerTickingBlockEntity) entity).serverTick();
+		
+		BlockEntityTicker<TileEmcSynthesisChamber> clientTicker = null;
+		if(ClientTickingBlockEntity.class.isAssignableFrom(entityClass))
+			clientTicker = (level, pos, state, entity) -> ((ClientTickingBlockEntity) entity).clientTick();
+		
+		BlocksEAAE2.EMC_SYNTHESIS_CHAMBER.setBlockEntity(entityClass, BlocksEAAE2.EMC_SYNTHESIS_CHAMBER_TYPE, clientTicker, serverTicker);
+		
+		Upgrades.add(AEItems.SPEED_CARD, BlocksEAAE2.EMC_SYNTHESIS_CHAMBER, 5);
+	}
+	
 	public void register(RegisterEvent event)
 	{
 		IForgeRegistry<?> reg = event.getForgeRegistry();
 		if(reg == null) reg = RegistryMapping.getRegistryByType(RegistryMapping.getSuperType(event.getRegistryKey()));
 		
 		RegistryAdapter.register(event, reg, ItemsEAAE2.class, EquivalentAdditions.MOD_ID, "ae2/");
+		RegistryAdapter.register(event, reg, BlocksEAAE2.class, EquivalentAdditions.MOD_ID, "ae2/");
 		
 		var key = event.getRegistryKey();
 		
@@ -104,5 +133,18 @@ public class CompatAE2
 					.addAll(ItemsEAAE2.EMC_CELL_HOUSING, cell.getCoreItem())
 					.register();
 		}
+		
+		e.shaped().result(BlocksEAAE2.EMC_SYNTHESIS_CHAMBER, 4)
+				.shape("mam", "ata", "mam")
+				.map('m', PEItems.DARK_MATTER)
+				.map('a', AEBlocks.MOLECULAR_ASSEMBLER)
+				.map('t', PEBlocks.TRANSMUTATION_TABLE)
+				.register();
+		e.shaped().result(BlocksEAAE2.EMC_SYNTHESIS_CHAMBER, 4)
+				.shape("mam", "ata", "mam")
+				.map('a', PEItems.DARK_MATTER)
+				.map('m', AEBlocks.MOLECULAR_ASSEMBLER)
+				.map('t', PEBlocks.TRANSMUTATION_TABLE)
+				.register();
 	}
 }

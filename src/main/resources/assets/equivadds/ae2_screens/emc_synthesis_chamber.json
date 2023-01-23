@@ -1,0 +1,50 @@
+{
+  "$schema": "schema.json",
+  "includes": [
+    "common/common.json",
+    "common/player_inventory.json"
+  ],
+  "background": {
+    "texture": "equivadds:textures/gui/ae2/emc_synthesis_chamber.png",
+    "srcRect": [
+      0,
+      0,
+      176,
+      197
+    ]
+  },
+  "slots": {
+    "MACHINE_OUTPUT": {
+      "left": 77,
+      "top": 47
+    }
+  },
+  "text": {
+    "dialog_title": {
+      "text": {
+        "translate": "block.equivadds.ae2.emc_synthesis_chamber"
+      },
+      "position": {
+        "left": 8,
+        "top": 6
+      }
+    }
+  },
+  "images": {
+    "progressBar": {
+      "texture": "equivadds:textures/gui/ae2/emc_synthesis_chamber.png",
+      "srcRect": [
+        148,
+        201,
+        6,
+        18
+      ]
+    }
+  },
+  "widgets": {
+    "progressBar": {
+      "left": 99,
+      "top": 46
+    }
+  }
+}

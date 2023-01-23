@@ -18,4 +18,10 @@ public class TileRelayMK5
 	{
 		return 0.75;
 	}
+	
+	@Override
+	public int getExtraBurnTimes()
+	{
+		return 4;
+	}
 }
