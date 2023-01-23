@@ -3,6 +3,7 @@ package org.zeith.equivadds.tiles;
 import moze_intel.projecte.api.capabilities.IKnowledgeProvider;
 import moze_intel.projecte.api.capabilities.PECapabilities;
 import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
+import moze_intel.projecte.utils.Constants;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -14,6 +15,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.zeith.equivadds.EquivalentAdditions;
+import org.zeith.equivadds.api.IMeEmcStorage;
 import org.zeith.equivadds.init.TilesEA;
 import org.zeith.equivadds.net.PacketSyncEMC;
 import org.zeith.equivadds.util.EMCHelper;
@@ -32,7 +34,7 @@ import java.util.UUID;
 
 public class TileEMCProxy
 		extends TileSyncableTickable
-		implements IEmcStorage, ITooltipProvider
+		implements IEmcStorage, ITooltipProvider, IMeEmcStorage
 {
 	@NBTSerializable
 	public UUID owner;
@@ -46,10 +48,12 @@ public class TileEMCProxy
 	@NBTSerializable
 	public final EMCStorage internal = new EMCStorage();
 	
+	protected boolean emcChanged;
+	
 	public TileEMCProxy(BlockPos pos, BlockState state)
 	{
 		super(TilesEA.EMC_PROXY, pos, state);
-		dispatcher.registerProperty("emc", internal.emcSync);
+		dispatcher.registerProperty("me", internal.emcSync);
 	}
 	
 	@Override
@@ -65,7 +69,7 @@ public class TileEMCProxy
 				if(need > 0) internal.storedEmcChanged();
 			}
 			
-			knowledge = getKnowledge();
+			knowledge = updateKnowledge();
 			if((knowledge == null) == hasKnowledge || atTickRate(20))
 				sync();
 			hasKnowledge = knowledge != null;
@@ -73,7 +77,7 @@ public class TileEMCProxy
 			setTooltipDirty(true);
 	}
 	
-	public IKnowledgeProvider getKnowledge()
+	protected IKnowledgeProvider updateKnowledge()
 	{
 		if(!level.isClientSide && level.getServer() != null)
 		{
@@ -84,15 +88,29 @@ public class TileEMCProxy
 				IKnowledgeProvider know = mp.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY, null).orElse(null);
 				if(know != null)
 				{
-					know.setEmc(know.getEmc().add(BigInteger.valueOf(internal.emc)));
-					Network.sendTo(new PacketSyncEMC(know.getEmc()), mp);
+					if(internal.emc > 0)
+					{
+						know.setEmc(know.getEmc().add(BigInteger.valueOf(internal.emc)));
+						internal.emc = 0L;
+						emcChanged = true;
+					}
 					
-					internal.emc = 0L;
+					if(emcChanged)
+					{
+						emcChanged = false;
+						Network.sendTo(new PacketSyncEMC(know.getEmc()), mp);
+					}
 				}
 				return know;
 			}
 		}
 		return null;
+	}
+	
+	@Nullable
+	public IKnowledgeProvider getKnowledge()
+	{
+		return knowledge;
 	}
 	
 	@Override
@@ -170,7 +188,7 @@ public class TileEMCProxy
 				.newLine();
 		
 		tip.addText(Component.translatable("tooltip." + EquivalentAdditions.MOD_ID + ".stored",
-				Component.literal(String.format("%,d", Math.round(internal.getStoredEmc()))).withStyle(ChatFormatting.AQUA)
+				Component.literal(Constants.EMC_FORMATTER.format(Math.round(internal.getStoredEmc()))).withStyle(ChatFormatting.AQUA)
 		)).newLine();
 		
 		if(owner != null && level != null)
@@ -182,5 +200,59 @@ public class TileEMCProxy
 		tip.addText(Component.translatable("tooltip." + EquivalentAdditions.MOD_ID + ".owner"));
 		tip.addText(Component.literal(": "));
 		tip.addText(Component.literal(username).withStyle(ChatFormatting.GREEN));
+	}
+	
+	public static final BigInteger MAXLONG = BigInteger.valueOf(Long.MAX_VALUE);
+	
+	@Override
+	public long getExternalMeEmc()
+	{
+		if(knowledge != null) return knowledge.getEmc().min(MAXLONG).longValue();
+		return 0;
+	}
+	
+	@Override
+	public long getExternalEmcCapacity()
+	{
+		if(knowledge != null) return Long.MAX_VALUE;
+		return 0;
+	}
+	
+	@Override
+	public long insertExternalEmc(long amount, EmcAction action)
+	{
+		if(knowledge != null)
+		{
+			if(action.execute() && amount > 0)
+			{
+				knowledge.setEmc(knowledge.getEmc().add(BigInteger.valueOf(amount)));
+				emcChanged = true;
+			}
+			return amount;
+		}
+		
+		return 0;
+	}
+	
+	@Override
+	public long extractExternalEmc(long amount, EmcAction action)
+	{
+		if(knowledge != null)
+		{
+			// It's a long value anyway, so this is safe.
+			amount = BigInteger.valueOf(amount)
+					.min(knowledge.getEmc())
+					.longValue();
+			
+			if(action.execute() && amount > 0)
+			{
+				knowledge.setEmc(knowledge.getEmc().subtract(BigInteger.valueOf(amount)));
+				emcChanged = true;
+			}
+			
+			return amount;
+		}
+		
+		return 0;
 	}
 }

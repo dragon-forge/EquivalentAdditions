@@ -8,9 +8,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.zeith.equivadds.compat.CompatEA;
 import org.zeith.equivadds.init.ItemsEA;
 import org.zeith.equivadds.proxy.ClientProxyEA;
 import org.zeith.equivadds.proxy.CommonProxyEA;
+import org.zeith.hammerlib.compat.base.CompatList;
 import org.zeith.hammerlib.core.adapter.LanguageAdapter;
 import org.zeith.hammerlib.event.fml.FMLFingerprintCheckEvent;
 import org.zeith.hammerlib.util.CommonMessages;
@@ -21,6 +23,7 @@ public class EquivalentAdditions
 	public static final String MOD_ID = "equivadds";
 	public static final Logger LOG = LogManager.getLogger("EquivalentAdditions");
 	
+	public static final CompatList<CompatEA> COMPATS = CompatList.gather(CompatEA.class);
 	public static final CommonProxyEA PROXY = DistExecutor.unsafeRunForDist(() -> ClientProxyEA::new, () -> CommonProxyEA::new);
 	
 	public static final CreativeModeTab TAB = new CreativeModeTab(MOD_ID)
@@ -42,6 +45,7 @@ public class EquivalentAdditions
 		
 		modBus.addListener(this::checkFingerprint);
 		PROXY.construct(modBus);
+		COMPATS.getActive().forEach(c -> c.setup(modBus));
 	}
 	
 	private void checkFingerprint(FMLFingerprintCheckEvent e)

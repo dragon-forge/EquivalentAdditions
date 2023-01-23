@@ -89,7 +89,7 @@ public class BlockEMCFlower
 		if(ProjectEConfig.client.statToolTips.get())
 		{
 			tooltips.add(PELang.EMC_MAX_GEN_RATE.translateColored(ChatFormatting.DARK_PURPLE, ChatFormatting.BLUE, Constants.EMC_FORMATTER.format(flowerProperties.genRate())));
-			tooltips.add(PELang.EMC_MAX_STORAGE.translateColored(ChatFormatting.DARK_PURPLE, ChatFormatting.BLUE, Constants.EMC_FORMATTER.format(flowerProperties.collectorStorage())));
+			tooltips.add(PELang.EMC_MAX_STORAGE.translateColored(ChatFormatting.DARK_PURPLE, ChatFormatting.BLUE, Constants.EMC_FORMATTER.format(flowerProperties.storage())));
 		}
 	}
 	

@@ -1,0 +1,198 @@
+package org.zeith.equivadds.items.tools;
+
+import com.google.common.collect.Multimap;
+import moze_intel.projecte.api.capabilities.item.IExtraFunction;
+import moze_intel.projecte.api.capabilities.item.IItemCharge;
+import moze_intel.projecte.capability.*;
+import moze_intel.projecte.gameObjs.PETags;
+import moze_intel.projecte.gameObjs.items.IBarHelper;
+import moze_intel.projecte.gameObjs.items.IItemMode;
+import moze_intel.projecte.utils.PlayerHelper;
+import moze_intel.projecte.utils.ToolHelper;
+import moze_intel.projecte.utils.text.ILangEntry;
+import moze_intel.projecte.utils.text.PELang;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraftforge.common.TierSortingRegistry;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.zeith.equivadds.init.EnumMatterTypesEA;
+import org.zeith.equivadds.util.ToolHelperEA;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+public class ItemSwordEA
+		extends SwordItem
+		implements IExtraFunction, IItemCharge, IBarHelper, IItemMode
+{
+	private final List<Supplier<ItemCapability<?>>> supportedCapabilities = new ArrayList<>();
+	private final ToolHelper.ChargeAttributeCache attributeCache = new ToolHelper.ChargeAttributeCache();
+	private final EnumMatterTypesEA matterType;
+	private final int numCharges;
+	
+	private final ILangEntry[] modeDesc;
+	
+	public ItemSwordEA(EnumMatterTypesEA matterType, int numCharges, int damage, Properties props)
+	{
+		super(matterType, damage, -2.4F, props);
+		this.matterType = matterType;
+		this.numCharges = numCharges;
+		modeDesc = new ILangEntry[]{ PELang.MODE_RED_SWORD_1, PELang.MODE_RED_SWORD_2};
+		addItemCapability(ModeChangerItemCapabilityWrapper::new);
+		addItemCapability(ChargeItemCapabilityWrapper::new);
+		addItemCapability(ExtraFunctionItemCapabilityWrapper::new);
+	}
+	
+	protected boolean slayAll(@NotNull ItemStack stack)
+	{
+		return getMode(stack) == 1;
+	}
+	
+	@Override
+	public ILangEntry[] getModeLangEntries()
+	{
+		return modeDesc;
+	}
+	
+	@Override
+	public void appendHoverText(@NotNull ItemStack stack, @Nullable Level level, @NotNull List<Component> tooltips, @NotNull TooltipFlag flags)
+	{
+		super.appendHoverText(stack, level, tooltips, flags);
+		tooltips.add(getToolTip(stack));
+	}
+	
+	protected void addItemCapability(Supplier<ItemCapability<?>> capabilitySupplier)
+	{
+		supportedCapabilities.add(capabilitySupplier);
+	}
+	
+	@Override
+	public boolean isEnchantable(@NotNull ItemStack stack)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean isBookEnchantable(ItemStack stack, ItemStack book)
+	{
+		return false;
+	}
+	
+	@Override
+	public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment)
+	{
+		return false;
+	}
+	
+	@Override
+	public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, T entity, Consumer<T> onBroken)
+	{
+		return 0;
+	}
+	
+	@Override
+	public boolean isBarVisible(@NotNull ItemStack stack)
+	{
+		return true;
+	}
+	
+	@Override
+	public float getWidthForBar(ItemStack stack)
+	{
+		return 1 - getChargePercent(stack);
+	}
+	
+	@Override
+	public int getBarWidth(@NotNull ItemStack stack)
+	{
+		return getScaledBarWidth(stack);
+	}
+	
+	@Override
+	public int getBarColor(@NotNull ItemStack stack)
+	{
+		return getColorForBar(stack);
+	}
+	
+	@Override
+	public float getDestroySpeed(@NotNull ItemStack stack, @NotNull BlockState state)
+	{
+		float speed = super.getDestroySpeed(stack, state);
+		if(speed == 1 && state.is(PETags.Blocks.MINEABLE_WITH_PE_SWORD))
+		{
+			speed = matterType.getSpeed();
+		}
+		return ToolHelperEA.getDestroySpeed(speed, matterType, getCharge(stack));
+	}
+	
+	@Override
+	public boolean isCorrectToolForDrops(@NotNull ItemStack stack, BlockState state)
+	{
+		//Note: our tag intercepts the vanilla sword matches
+		return state.is(PETags.Blocks.MINEABLE_WITH_PE_SWORD) && TierSortingRegistry.isCorrectTierForDrops(matterType, state);
+	}
+	
+	@Override
+	public int getNumCharges(@NotNull ItemStack stack)
+	{
+		return numCharges;
+	}
+	
+	@Override
+	public ICapabilityProvider initCapabilities(ItemStack stack, CompoundTag nbt)
+	{
+		if(supportedCapabilities.isEmpty())
+		{
+			return super.initCapabilities(stack, nbt);
+		}
+		return new ItemCapabilityWrapper(stack, supportedCapabilities);
+	}
+	
+	@Override
+	public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity damaged, @NotNull LivingEntity damager)
+	{
+		ToolHelper.attackWithCharge(stack, damaged, damager, 1.0F);
+		return true;
+	}
+	
+	@NotNull
+	@Override
+	public AABB getSweepHitBox(@NotNull ItemStack stack, @NotNull Player player, @NotNull Entity target)
+	{
+		int charge = getCharge(stack);
+		return target.getBoundingBox().inflate(charge, charge / 4D, charge);
+	}
+	
+	@Override
+	public boolean doExtraFunction(@NotNull ItemStack stack, @NotNull Player player, InteractionHand hand)
+	{
+		if(player.getAttackStrengthScale(0F) == 1)
+		{
+			ToolHelper.attackAOE(stack, player, slayAll(stack), getDamage(), 0, hand);
+			PlayerHelper.resetCooldown(player);
+			return true;
+		}
+		return false;
+	}
+	
+	@NotNull
+	@Override
+	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(@NotNull EquipmentSlot slot, ItemStack stack)
+	{
+		return attributeCache.addChargeAttributeModifier(super.getAttributeModifiers(slot, stack), slot, stack);
+	}
+}

@@ -200,7 +200,7 @@ public class TileCustomRelay
 			long emcToInsert = (long) bonusEMC;
 			forceInsertEmc(emcToInsert, EmcAction.EXECUTE);
 			//Don't subtract the actual amount we managed to insert so that we do not continue to grow to
-			// an infinite amount of "bonus" emc if our buffer is full.
+			// an infinite amount of "bonus" me if our buffer is full.
 			bonusEMC -= emcToInsert;
 		}
 		markDirty(false);

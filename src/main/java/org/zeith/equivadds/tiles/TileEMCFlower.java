@@ -3,6 +3,7 @@ package org.zeith.equivadds.tiles;
 import moze_intel.projecte.api.capabilities.PECapabilities;
 import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
 import moze_intel.projecte.gameObjs.block_entities.RelayMK1BlockEntity;
+import moze_intel.projecte.utils.Constants;
 import moze_intel.projecte.utils.WorldHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
@@ -13,6 +14,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
+import org.jetbrains.annotations.*;
 import org.zeith.equivadds.EquivalentAdditions;
 import org.zeith.equivadds.api.EmcFlower;
 import org.zeith.equivadds.tiles.relays.TileCustomRelay;
@@ -28,11 +32,11 @@ import java.util.List;
 
 public class TileEMCFlower
 		extends TileSyncableTickable
-		implements ITooltipProvider
+		implements ITooltipProvider, IEmcStorage
 {
 	public final EmcFlower.FlowerProperties props;
 	
-	@NBTSerializable("emc")
+	@NBTSerializable("me")
 	public final EMCStorage storage;
 	
 	@NBTSerializable("unproc_emc")
@@ -53,7 +57,7 @@ public class TileEMCFlower
 			}
 		};
 		
-		dispatcher.registerProperty("emc", storage.emcSync);
+		dispatcher.registerProperty("me", storage.emcSync);
 	}
 	
 	@Override
@@ -102,7 +106,7 @@ public class TileEMCFlower
 	{
 		if(level == null)
 		{
-			//If we cannot provide emc then just return
+			//If we cannot provide me then just return
 			return 0;
 		}
 		
@@ -121,11 +125,14 @@ public class TileEMCFlower
 				{
 					neighboringBE.getCapability(PECapabilities.EMC_STORAGE_CAPABILITY, dir.getOpposite()).ifPresent(theirEmcStorage ->
 					{
-						// If they are both relays don't add the pairing to prevent thrashing
-						if(theirEmcStorage.insertEmc(1, IEmcStorage.EmcAction.SIMULATE) > 0)
+						if(!isRelay() || !theirEmcStorage.isRelay())
 						{
-							//If they would be wiling to accept any Emc then we consider them to be an "acceptor"
-							targets.add(theirEmcStorage);
+							//If they are both relays don't add the pairing to prevent thrashing
+							if(theirEmcStorage.insertEmc(1, EmcAction.SIMULATE) > 0)
+							{
+								//If they would be wiling to accept any Emc then we consider them to be an "acceptor"
+								targets.add(theirEmcStorage);
+							}
 						}
 					});
 				}
@@ -154,6 +161,15 @@ public class TileEMCFlower
 		setTooltipDirty(true);
 	}
 	
+	final LazyOptional<?> thisLazy = LazyOptional.of(() -> this);
+	
+	@Override
+	public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side)
+	{
+		if(cap == PECapabilities.EMC_STORAGE_CAPABILITY) return thisLazy.cast();
+		return super.getCapability(cap, side);
+	}
+	
 	private boolean isDirty;
 	
 	@Override
@@ -176,11 +192,42 @@ public class TileEMCFlower
 				.newLine();
 		
 		tip.addText(Component.translatable("tooltip." + EquivalentAdditions.MOD_ID + ".stored",
-				Component.literal(String.format("%,d", storage.getStoredEmc())).withStyle(ChatFormatting.AQUA)
+				Component.literal(Constants.EMC_FORMATTER.format(storage.getStoredEmc())).withStyle(ChatFormatting.AQUA)
 		)).newLine();
 		
 		tip.addText(Component.translatable("tooltip." + EquivalentAdditions.MOD_ID + ".capacity",
-				Component.literal(String.format("%,d", storage.getMaximumEmc())).withStyle(ChatFormatting.AQUA)
+				Component.literal(Constants.EMC_FORMATTER.format(storage.getMaximumEmc())).withStyle(ChatFormatting.AQUA)
 		)).newLine();
+	}
+	
+	@Override
+	public @Range(from = 0L, to = 9223372036854775807L) long getStoredEmc()
+	{
+		return storage.getStoredEmc();
+	}
+	
+	@Override
+	public @Range(from = 1L, to = 9223372036854775807L) long getMaximumEmc()
+	{
+		return storage.getMaximumEmc();
+	}
+	
+	@Override
+	public long extractEmc(long l, EmcAction emcAction)
+	{
+		return storage.extractEmc(l, emcAction);
+	}
+	
+	@Override
+	public long insertEmc(long l, EmcAction emcAction)
+	{
+		// Flowers are SOURCE of EMC, and thus can not accept EMC into them!
+		return 0;
+	}
+	
+	@Override
+	public boolean isRelay()
+	{
+		return false;
 	}
 }

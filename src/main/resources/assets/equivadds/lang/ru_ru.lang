@@ -53,9 +53,29 @@ item.equivadds.relay_array.mk5=Relay Array MK5
 item.equivadds.relay_array.mk6=Relay Array MK6
 item.equivadds.relay_array.mk7=Relay Array MK7
 
+## TOOLS ##
+
+item.equivadds.bm_pickaxe=Blue Matter Pickaxe
+item.equivadds.bm_shovel=Blue Matter Shovel
+
+###########
+
 tooltip.equivadds.transfer=Перемещение
 tooltip.equivadds.stored=В Хранилище %s EMC
 tooltip.equivadds.capacity=Ёмкость: %s EMC
 tooltip.equivadds.stored.cap=В Хранилище %s/%s EMC
 tooltip.equivadds.owner=Владелец
 gui.equivadds.emcpt=ЕМС/тик
+gui.equivadds.emc=EMC
+
+#### AE2 COMPATIBILITY ####
+
+item.equivadds.ae2.emc_cell_housing=ME EMC Cell Housing
+item.equivadds.ae2.emc_storage_cell_1k=1K ME EMC Storage Cell
+item.equivadds.ae2.emc_storage_cell_4k=4K ME EMC Storage Cell
+item.equivadds.ae2.emc_storage_cell_16k=16K ME EMC Storage Cell
+item.equivadds.ae2.emc_storage_cell_64k=64K ME EMC Storage Cell
+item.equivadds.ae2.emc_storage_cell_256k=256K ME EMC Storage Cell
+
+###########################
+

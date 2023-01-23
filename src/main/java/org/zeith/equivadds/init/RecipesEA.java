@@ -109,5 +109,32 @@ public class RecipesEA
 		BEMCFlowersEA.MK5.registerRecipes(e, BlocksEA.COLLECTOR_MK5, BlocksEA.RELAY_MK5);
 		BEMCFlowersEA.MK6.registerRecipes(e, BlocksEA.COLLECTOR_MK6, BlocksEA.RELAY_MK6);
 		BEMCFlowersEA.MK7.registerRecipes(e, BlocksEA.COLLECTOR_MK7, BlocksEA.RELAY_MK7);
+		
+		e.shaped().result(ToolsEA.BLUE_MATTER_PICKAXE)
+				.shape("bbb", " p ", " m ")
+				.map('b', ItemsEA.BLUE_MATTER)
+				.map('p', PEItems.RED_MATTER_PICKAXE)
+				.map('m', PEItems.RED_MATTER)
+				.register();
+		
+		e.shaped().result(ToolsEA.BLUE_MATTER_SHOVEL)
+				.shape("b", "p", "m")
+				.map('b', ItemsEA.BLUE_MATTER)
+				.map('p', PEItems.RED_MATTER_SHOVEL)
+				.map('m', PEItems.RED_MATTER)
+				.register();
+		
+		e.shaped().result(ToolsEA.BLUE_MATTER_HOE)
+				.shape("bb", " p", " m")
+				.map('b', ItemsEA.BLUE_MATTER)
+				.map('p', PEItems.RED_MATTER_HOE)
+				.map('m', PEItems.RED_MATTER)
+				.register();
+		
+		e.shaped().result(ToolsEA.BLUE_MATTER_SWORD)
+				.shape("b", "b", "p")
+				.map('b', ItemsEA.BLUE_MATTER)
+				.map('p', PEItems.RED_MATTER_SWORD)
+				.register();
 	}
 }
