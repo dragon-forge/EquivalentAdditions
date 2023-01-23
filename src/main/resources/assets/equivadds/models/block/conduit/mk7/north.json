@@ -1,0 +1,6 @@
+{
+  "parent": "equivadds:block/conduit/base/north",
+  "textures": {
+    "pipe": "equivadds:block/conduit/mk7"
+  }
+}

@@ -237,10 +237,7 @@ public abstract class TileCustomCollector
 		
 	}
 	
-	public @Range(
-			from = 0L,
-			to = Long.MAX_VALUE
-	) long getEmcToNextGoal()
+	public long getEmcToNextGoal()
 	{
 		ItemStack lock = this.getLock();
 		ItemStack upgrading = this.getUpgrading();
@@ -321,6 +318,7 @@ public abstract class TileCustomCollector
 		}
 	}
 	
+	@Override
 	public void load(@Nonnull CompoundTag nbt)
 	{
 		super.load(nbt);
@@ -329,6 +327,7 @@ public abstract class TileCustomCollector
 		this.unprocessedEMC = nbt.getDouble("UnprocessedEMC");
 	}
 	
+	@Override
 	protected void saveAdditional(@Nonnull CompoundTag tag)
 	{
 		super.saveAdditional(tag);
@@ -401,6 +400,7 @@ public abstract class TileCustomCollector
 			});
 		}
 		
+		@Override
 		protected ICapabilityResolver<IItemHandler> getResolver(@Nullable Direction side)
 		{
 			if(side == null)
@@ -412,6 +412,7 @@ public abstract class TileCustomCollector
 			}
 		}
 		
+		@Override
 		public void invalidateAll()
 		{
 			this.joined.invalidateAll();

@@ -1,0 +1,6 @@
+{
+  "parent": "equivadds:item/conduits/base",
+  "textures": {
+    "pipe": "equivadds:block/conduit/mk4"
+  }
+}

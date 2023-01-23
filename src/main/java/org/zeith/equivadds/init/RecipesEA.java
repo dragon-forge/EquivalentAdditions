@@ -27,6 +27,16 @@ public class RecipesEA
 		e.shaped().result(fuelBlock).shape("fff", "fff", "fff").map('f', fuelItem).register();
 	}
 	
+	private static void addConduit(RegisterRecipesEvent e, ItemLike conduit, ItemLike fuel, Object matter)
+	{
+		e.shaped().result(conduit, 8)
+				.shape("ggg", "fmf", "ggg")
+				.map('g', TagsHL.Items.STORAGE_BLOCKS_GLOWSTONE)
+				.map('f', fuel)
+				.map('m', matter)
+				.register();
+	}
+	
 	private void addMatter(RegisterRecipesEvent e, ItemLike matter, ItemLike matterBlock,
 						   ItemLike collector, ItemLike relay,
 						   ItemLike prevCollector, ItemLike prevRelay)
@@ -66,6 +76,14 @@ public class RecipesEA
 		addMatter(e, ItemsEA.PURPLE_MATTER, BlocksEA.PURPLE_MATTER_BLOCK, BlocksEA.COLLECTOR_MK5, BlocksEA.RELAY_MK5, BlocksEA.COLLECTOR_MK4, BlocksEA.RELAY_MK4);
 		addMatter(e, ItemsEA.ORANGE_MATTER, BlocksEA.ORANGE_MATTER_BLOCK, BlocksEA.COLLECTOR_MK6, BlocksEA.RELAY_MK6, BlocksEA.COLLECTOR_MK5, BlocksEA.RELAY_MK5);
 		addMatter(e, ItemsEA.GREEN_MATTER, BlocksEA.GREEN_MATTER_BLOCK, BlocksEA.COLLECTOR_MK7, BlocksEA.RELAY_MK7, BlocksEA.COLLECTOR_MK6, BlocksEA.RELAY_MK6);
+		
+		addConduit(e, BlocksEA.CONDUIT_MK1, PEItems.ALCHEMICAL_COAL, Tags.Items.STORAGE_BLOCKS_DIAMOND);
+		addConduit(e, BlocksEA.CONDUIT_MK2, PEItems.MOBIUS_FUEL, PEItems.DARK_MATTER);
+		addConduit(e, BlocksEA.CONDUIT_MK3, PEItems.AETERNALIS_FUEL, PEItems.RED_MATTER);
+		addConduit(e, BlocksEA.CONDUIT_MK4, ItemsEA.ZEITH_FUEL, ItemsEA.BLUE_MATTER);
+		addConduit(e, BlocksEA.CONDUIT_MK5, ItemsEA.MYSTERIUM_FUEL, ItemsEA.PURPLE_MATTER);
+		addConduit(e, BlocksEA.CONDUIT_MK6, ItemsEA.CITRINIUM_FUEL, ItemsEA.ORANGE_MATTER);
+		addConduit(e, BlocksEA.CONDUIT_MK7, ItemsEA.VERDANITE_FUEL, ItemsEA.GREEN_MATTER);
 		
 		e.shaped().result(ItemsEA.BLUE_MATTER)
 				.shape("fff", "mmm", "fff")

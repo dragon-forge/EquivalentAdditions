@@ -1,7 +1,9 @@
 package org.zeith.equivadds.init;
 
+import moze_intel.projecte.gameObjs.EnumCollectorTier;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Material;
+import org.zeith.equivadds.api.EmcConduit;
 import org.zeith.equivadds.blocks.*;
 import org.zeith.hammerlib.annotations.RegistryName;
 import org.zeith.hammerlib.annotations.SimplyRegister;
@@ -44,6 +46,27 @@ public interface BlocksEA
 	@RegistryName("relay_mk7")
 	BlockCustomRelay RELAY_MK7 = new BlockCustomRelay(EnumRelayTiersEA.MK7, BlockBehaviour.Properties.of(Material.GLASS).requiresCorrectToolForDrops()
 			.strength(10, 30).lightLevel(state -> 15));
+	
+	@RegistryName("conduits/mk1")
+	EmcConduit CONDUIT_MK1 = new EmcConduit(EmcConduit.ConduitProperties.ofVanilla(EnumCollectorTier.MK1));
+	
+	@RegistryName("conduits/mk2")
+	EmcConduit CONDUIT_MK2 = new EmcConduit(EmcConduit.ConduitProperties.ofVanilla(EnumCollectorTier.MK2));
+	
+	@RegistryName("conduits/mk3")
+	EmcConduit CONDUIT_MK3 = new EmcConduit(EmcConduit.ConduitProperties.ofVanilla(EnumCollectorTier.MK3));
+	
+	@RegistryName("conduits/mk4")
+	EmcConduit CONDUIT_MK4 = new EmcConduit(EmcConduit.ConduitProperties.ofCustom(EnumCollectorTiersEA.MK4));
+	
+	@RegistryName("conduits/mk5")
+	EmcConduit CONDUIT_MK5 = new EmcConduit(EmcConduit.ConduitProperties.ofCustom(EnumCollectorTiersEA.MK5));
+	
+	@RegistryName("conduits/mk6")
+	EmcConduit CONDUIT_MK6 = new EmcConduit(EmcConduit.ConduitProperties.ofCustom(EnumCollectorTiersEA.MK6));
+	
+	@RegistryName("conduits/mk7")
+	EmcConduit CONDUIT_MK7 = new EmcConduit(EmcConduit.ConduitProperties.ofCustom(EnumCollectorTiersEA.MK7));
 	
 	@RegistryName("zeitheron_fuel_block")
 	BlockFuel ZEITH_FUEL_BLOCK = new BlockFuel(BlockBehaviour.Properties.of(Material.STONE).strength(3F), () -> ItemsEA.ZEITH_FUEL);

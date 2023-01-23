@@ -22,6 +22,8 @@ import net.minecraftforge.items.*;
 import net.minecraftforge.items.wrapper.CombinedInvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.zeith.equivadds.api.IHasEmcPriority;
+import org.zeith.equivadds.blocks.conduit.TileEmcConduit;
 import org.zeith.equivadds.container.ContainerCustomRelay;
 import org.zeith.equivadds.init.EnumRelayTiersEA;
 
@@ -29,7 +31,7 @@ import java.util.Optional;
 
 public class TileCustomRelay
 		extends CapabilityEmcBlockEntity
-		implements MenuProvider
+		implements MenuProvider, IHasEmcPriority
 {
 	private final CompactableStackHandler input;
 	private final ItemStackHandler output = new StackHandler(1);
@@ -218,6 +220,12 @@ public class TileCustomRelay
 	public Component getDisplayName()
 	{
 		return getBlockState().getBlock().getName();
+	}
+	
+	@Override
+	public int getPriority(Direction from, TileEmcConduit conduit)
+	{
+		return 1;
 	}
 	
 	private class RelayItemHandlerProvider

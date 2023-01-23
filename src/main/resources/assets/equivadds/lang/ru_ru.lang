@@ -1,10 +1,13 @@
 
 itemGroup.equivadds=Equivalent Additions
 
-block.equivadds.pipe_emc_mk1=Транспортная труба для ЕМС МК1
-block.equivadds.pipe_emc_mk2=Транспортная труба для ЕМС МК2
-block.equivadds.pipe_emc_mk3=Транспортная труба для ЕМС МК3
-block.equivadds.pipe_emc_mk4=Транспортная труба для ЕМС МК4
+block.equivadds.conduits.mk1=Транспортная труба для ЕМС МК1
+block.equivadds.conduits.mk2=Транспортная труба для ЕМС МК2
+block.equivadds.conduits.mk3=Транспортная труба для ЕМС МК3
+block.equivadds.conduits.mk4=Транспортная труба для ЕМС МК4
+block.equivadds.conduits.mk5=Транспортная труба для ЕМС МК5
+block.equivadds.conduits.mk6=Транспортная труба для ЕМС МК6
+block.equivadds.conduits.mk7=Транспортная труба для ЕМС МК7
 block.equivadds.zeitheron_fuel_block=Блок Топлива Зейта
 block.equivadds.mysterium_fuel_block=Mysterium Fuel Block
 block.equivadds.citrinium_fuel_block=Citrinium Fuel Block

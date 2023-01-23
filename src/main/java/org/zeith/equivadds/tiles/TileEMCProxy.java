@@ -15,7 +15,9 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.zeith.equivadds.EquivalentAdditions;
+import org.zeith.equivadds.api.IHasEmcPriority;
 import org.zeith.equivadds.api.IMeEmcStorage;
+import org.zeith.equivadds.blocks.conduit.TileEmcConduit;
 import org.zeith.equivadds.init.TilesEA;
 import org.zeith.equivadds.net.PacketSyncEMC;
 import org.zeith.equivadds.util.EMCHelper;
@@ -34,7 +36,7 @@ import java.util.UUID;
 
 public class TileEMCProxy
 		extends TileSyncableTickable
-		implements IEmcStorage, ITooltipProvider, IMeEmcStorage
+		implements IEmcStorage, ITooltipProvider, IMeEmcStorage, IHasEmcPriority
 {
 	@NBTSerializable
 	public UUID owner;
@@ -254,5 +256,11 @@ public class TileEMCProxy
 		}
 		
 		return 0;
+	}
+	
+	@Override
+	public int getPriority(Direction from, TileEmcConduit conduit)
+	{
+		return 100;
 	}
 }

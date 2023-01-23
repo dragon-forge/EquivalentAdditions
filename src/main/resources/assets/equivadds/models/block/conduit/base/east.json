@@ -1,0 +1,64 @@
+{
+  "render_type": "cutout",
+  "textures": {
+    "0": "#pipe",
+    "particle": "#pipe"
+  },
+  "elements": [
+    {
+      "name": "east",
+      "from": [
+        11,
+        5,
+        5
+      ],
+      "to": [
+        16,
+        11,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            10,
+            6,
+            16,
+            11
+          ],
+          "rotation": 90,
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            10,
+            1,
+            16,
+            6
+          ],
+          "rotation": 270,
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            4,
+            6,
+            10,
+            11
+          ],
+          "rotation": 270,
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            10,
+            11,
+            16,
+            16
+          ],
+          "rotation": 270,
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

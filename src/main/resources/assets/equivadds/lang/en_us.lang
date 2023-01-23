@@ -2,10 +2,13 @@
 
 itemGroup.equivadds=Equivalent Additions
 
-block.equivadds.pipe_emc_mk1=Energy Conduit MK1
-block.equivadds.pipe_emc_mk2=Energy Conduit MK2
-block.equivadds.pipe_emc_mk3=Energy Conduit MK3
-block.equivadds.pipe_emc_mk4=Energy Conduit MK4
+block.equivadds.conduits.mk1=Energy Conduit MK1
+block.equivadds.conduits.mk2=Energy Conduit MK2
+block.equivadds.conduits.mk3=Energy Conduit MK3
+block.equivadds.conduits.mk4=Energy Conduit MK4
+block.equivadds.conduits.mk5=Energy Conduit MK5
+block.equivadds.conduits.mk6=Energy Conduit MK6
+block.equivadds.conduits.mk7=Energy Conduit MK7
 block.equivadds.zeitheron_fuel_block=Zeitheron Fuel Block
 block.equivadds.mysterium_fuel_block=Mysterium Fuel Block
 block.equivadds.citrinium_fuel_block=Citrinium Fuel Block
