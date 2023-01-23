@@ -72,7 +72,7 @@ public class EmcFlower
 		}
 	}
 	
-	public void registerRecipes(RegisterRecipesEvent e, ItemLike collector, ItemLike relay)
+	public void registerRecipes(RegisterRecipesEvent e, ItemLike matter, ItemLike collector, ItemLike relay)
 	{
 		e.shaped().result(collectorArray)
 				.shape("ccc", " g ")
@@ -90,7 +90,7 @@ public class EmcFlower
 				.shape("ccc", "rdr", "ccc")
 				.map('c', collectorArray)
 				.map('r', relayArray)
-				.map('d', Tags.Items.STORAGE_BLOCKS_DIAMOND)
+				.map('d', matter)
 				.register();
 	}
 	

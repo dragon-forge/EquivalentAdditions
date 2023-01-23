@@ -2,8 +2,10 @@ package org.zeith.equivadds.init;
 
 import moze_intel.projecte.gameObjs.registries.PEBlocks;
 import moze_intel.projecte.gameObjs.registries.PEItems;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.common.Tags;
+import org.zeith.equivadds.items.tools.*;
 import org.zeith.hammerlib.annotations.ProvideRecipes;
 import org.zeith.hammerlib.api.IRecipeProvider;
 import org.zeith.hammerlib.core.init.TagsHL;
@@ -102,39 +104,123 @@ public class RecipesEA
 				.map('m', BlocksEA.BLUE_MATTER_BLOCK)
 				.register();
 		
-		BEMCFlowersEA.MK1.registerRecipes(e, PEBlocks.COLLECTOR, PEBlocks.RELAY);
-		BEMCFlowersEA.MK2.registerRecipes(e, PEBlocks.COLLECTOR_MK2, PEBlocks.RELAY_MK2);
-		BEMCFlowersEA.MK3.registerRecipes(e, PEBlocks.COLLECTOR_MK3, PEBlocks.RELAY_MK3);
-		BEMCFlowersEA.MK4.registerRecipes(e, BlocksEA.COLLECTOR_MK4, BlocksEA.RELAY_MK4);
-		BEMCFlowersEA.MK5.registerRecipes(e, BlocksEA.COLLECTOR_MK5, BlocksEA.RELAY_MK5);
-		BEMCFlowersEA.MK6.registerRecipes(e, BlocksEA.COLLECTOR_MK6, BlocksEA.RELAY_MK6);
-		BEMCFlowersEA.MK7.registerRecipes(e, BlocksEA.COLLECTOR_MK7, BlocksEA.RELAY_MK7);
+		BEMCFlowersEA.MK1.registerRecipes(e, Items.DIAMOND_BLOCK, PEBlocks.COLLECTOR, PEBlocks.RELAY);
+		BEMCFlowersEA.MK2.registerRecipes(e, PEItems.DARK_MATTER, PEBlocks.COLLECTOR_MK2, PEBlocks.RELAY_MK2);
+		BEMCFlowersEA.MK3.registerRecipes(e, PEItems.RED_MATTER, PEBlocks.COLLECTOR_MK3, PEBlocks.RELAY_MK3);
+		BEMCFlowersEA.MK4.registerRecipes(e, ItemsEA.BLUE_MATTER, BlocksEA.COLLECTOR_MK4, BlocksEA.RELAY_MK4);
+		BEMCFlowersEA.MK5.registerRecipes(e, ItemsEA.PURPLE_MATTER, BlocksEA.COLLECTOR_MK5, BlocksEA.RELAY_MK5);
+		BEMCFlowersEA.MK6.registerRecipes(e, ItemsEA.ORANGE_MATTER, BlocksEA.COLLECTOR_MK6, BlocksEA.RELAY_MK6);
+		BEMCFlowersEA.MK7.registerRecipes(e, ItemsEA.GREEN_MATTER, BlocksEA.COLLECTOR_MK7, BlocksEA.RELAY_MK7);
 		
-		e.shaped().result(ToolsEA.BLUE_MATTER_PICKAXE)
-				.shape("bbb", " p ", " m ")
-				.map('b', ItemsEA.BLUE_MATTER)
-				.map('p', PEItems.RED_MATTER_PICKAXE)
-				.map('m', PEItems.RED_MATTER)
-				.register();
 		
-		e.shaped().result(ToolsEA.BLUE_MATTER_SHOVEL)
-				.shape("b", "p", "m")
-				.map('b', ItemsEA.BLUE_MATTER)
-				.map('p', PEItems.RED_MATTER_SHOVEL)
-				.map('m', PEItems.RED_MATTER)
-				.register();
+		// This part of monstrocity makes tier upgrading a simple two-liner.
+		new MatterToolRecipes(new Up<>(ItemsEA.BLUE_MATTER, PEItems.RED_MATTER),
+				new Up<>(ToolsEA.BLUE_MATTER_PICKAXE, PEItems.RED_MATTER_PICKAXE),
+				new Up<>(ToolsEA.BLUE_MATTER_AXE, PEItems.RED_MATTER_AXE),
+				new Up<>(ToolsEA.BLUE_MATTER_SHOVEL, PEItems.RED_MATTER_SHOVEL),
+				new Up<>(ToolsEA.BLUE_MATTER_SWORD, PEItems.RED_MATTER_SWORD),
+				new Up<>(ToolsEA.BLUE_MATTER_HOE, PEItems.RED_MATTER_HOE),
+				new Up<>(ToolsEA.BLUE_MATTER_SHEARS, PEItems.RED_MATTER_SHEARS),
+				new Up<>(ToolsEA.BLUE_MATTER_HAMMER, PEItems.RED_MATTER_HAMMER),
+				new Up<>(ToolsEA.BLUE_MATTER_KATAR, PEItems.RED_MATTER_KATAR),
+				new Up<>(ToolsEA.BLUE_MATTER_MORNING_STAR, PEItems.RED_MATTER_MORNING_STAR)
+		)
+				.register(e) // blue matter
+				
+				.upgrade(ItemsEA.PURPLE_MATTER, ToolsEA.PURPLE_MATTER_PICKAXE, ToolsEA.PURPLE_MATTER_AXE, ToolsEA.PURPLE_MATTER_SHOVEL, ToolsEA.PURPLE_MATTER_SWORD, ToolsEA.PURPLE_MATTER_HOE, ToolsEA.PURPLE_MATTER_SHEARS, ToolsEA.PURPLE_MATTER_HAMMER, ToolsEA.PURPLE_MATTER_KATAR, ToolsEA.PURPLE_MATTER_MORNING_STAR)
+				.register(e) // purple matter
+				
+				.upgrade(ItemsEA.ORANGE_MATTER, ToolsEA.ORANGE_MATTER_PICKAXE, ToolsEA.ORANGE_MATTER_AXE, ToolsEA.ORANGE_MATTER_SHOVEL, ToolsEA.ORANGE_MATTER_SWORD, ToolsEA.ORANGE_MATTER_HOE, ToolsEA.ORANGE_MATTER_SHEARS, ToolsEA.ORANGE_MATTER_HAMMER, ToolsEA.ORANGE_MATTER_KATAR, ToolsEA.ORANGE_MATTER_MORNING_STAR)
+				.register(e) // orange matter
+				
+				.upgrade(ItemsEA.GREEN_MATTER, ToolsEA.GREEN_MATTER_PICKAXE, ToolsEA.GREEN_MATTER_AXE, ToolsEA.GREEN_MATTER_SHOVEL, ToolsEA.GREEN_MATTER_SWORD, ToolsEA.GREEN_MATTER_HOE, ToolsEA.GREEN_MATTER_SHEARS, ToolsEA.GREEN_MATTER_HAMMER, ToolsEA.GREEN_MATTER_KATAR, ToolsEA.GREEN_MATTER_MORNING_STAR)
+				.register(e) // green matter
+		;
+	}
+	
+	public record Up<T extends ItemLike>(T upgraded, ItemLike prev)
+	{
+		public Up<T> up(T next)
+		{
+			return new Up<>(next, upgraded);
+		}
+	}
+	
+	public record MatterToolRecipes(Up<ItemLike> matter, Up<ItemPickaxeEA> pickaxe, Up<ItemAxeEA> axe, Up<ItemShovelEA> shovel, Up<ItemSwordEA> sword, Up<ItemHoeEA> hoe, Up<ItemShearsEA> shears, Up<ItemHammerEA> hammer,
+									Up<ItemKatarEA> katar, Up<ItemMorningStarEA> morningStar)
+	{
+		public MatterToolRecipes upgrade(ItemLike nextMatter, ItemPickaxeEA nextPickaxe, ItemAxeEA nextAxe, ItemShovelEA nextShovel, ItemSwordEA nextSword, ItemHoeEA nextHoe, ItemShearsEA nextShears, ItemHammerEA nextHammer, ItemKatarEA nextKatar, ItemMorningStarEA nextMorningStar)
+		{
+			return new MatterToolRecipes(matter.up(nextMatter), pickaxe.up(nextPickaxe), axe.up(nextAxe), shovel.up(nextShovel), sword.up(nextSword), hoe.up(nextHoe), shears.up(nextShears), hammer.up(nextHammer), katar.up(nextKatar), morningStar.up(nextMorningStar));
+		}
 		
-		e.shaped().result(ToolsEA.BLUE_MATTER_HOE)
-				.shape("bb", " p", " m")
-				.map('b', ItemsEA.BLUE_MATTER)
-				.map('p', PEItems.RED_MATTER_HOE)
-				.map('m', PEItems.RED_MATTER)
-				.register();
-		
-		e.shaped().result(ToolsEA.BLUE_MATTER_SWORD)
-				.shape("b", "b", "p")
-				.map('b', ItemsEA.BLUE_MATTER)
-				.map('p', PEItems.RED_MATTER_SWORD)
-				.register();
+		public MatterToolRecipes register(RegisterRecipesEvent e)
+		{
+			e.shaped().result(pickaxe.upgraded())
+					.shape("bbb", " p ", " m ")
+					.map('b', matter.upgraded())
+					.map('p', pickaxe.prev())
+					.map('m', matter.prev())
+					.register();
+			
+			e.shaped().result(shovel.upgraded())
+					.shape("b", "p", "m")
+					.map('b', matter.upgraded())
+					.map('p', shovel.prev())
+					.map('m', matter.prev())
+					.register();
+			
+			e.shaped().result(hoe.upgraded())
+					.shape("bb", " p", " m")
+					.map('b', matter.upgraded())
+					.map('p', hoe.prev())
+					.map('m', matter.prev())
+					.register();
+			
+			e.shaped().result(axe.upgraded())
+					.shape("bb", "bp", " m")
+					.map('b', matter.upgraded())
+					.map('p', axe.prev())
+					.map('m', matter.prev())
+					.register();
+			
+			e.shaped().result(sword.upgraded())
+					.shape("b", "b", "p")
+					.map('b', matter.upgraded())
+					.map('p', sword.prev())
+					.register();
+			
+			e.shaped().result(shears.upgraded())
+					.shape(" b", "p ")
+					.map('b', matter.upgraded())
+					.map('p', shears.prev())
+					.register();
+			
+			e.shaped().result(hammer.upgraded())
+					.shape("bmb", " p ", " m ")
+					.map('b', matter.upgraded())
+					.map('p', hammer.prev())
+					.map('m', matter.prev())
+					.register();
+			
+			e.shaped().result(katar.upgraded())
+					.shape("saw", "hbb", "bbb")
+					.map('s', shears.upgraded())
+					.map('a', axe.upgraded())
+					.map('w', sword.upgraded())
+					.map('h', hoe.upgraded())
+					.map('b', matter.upgraded())
+					.register();
+			
+			e.shaped().result(morningStar.upgraded())
+					.shape("hps", "bbb", "bbb")
+					.map('h', hammer.upgraded())
+					.map('p', pickaxe.upgraded())
+					.map('s', shovel.upgraded())
+					.map('b', matter.upgraded())
+					.register();
+			
+			return this;
+		}
 	}
 }

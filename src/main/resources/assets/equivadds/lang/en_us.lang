@@ -56,10 +56,45 @@ item.equivadds.relay_array.mk7=Relay Array MK7
 
 ## TOOLS ##
 
-item.equivadds.bm_pickaxe=Blue Matter Pickaxe
-item.equivadds.bm_shovel=Blue Matter Shovel
-item.equivadds.bm_hoe=Blue Matter Hoe
-item.equivadds.bm_sword=Blue Matter Sword
+item.equivadds.tools.bm.pickaxe=Blue Matter Pickaxe
+item.equivadds.tools.bm.axe=Blue Matter Axe
+item.equivadds.tools.bm.shovel=Blue Matter Shovel
+item.equivadds.tools.bm.sword=Blue Matter Sword
+item.equivadds.tools.bm.hoe=Blue Matter Hoe
+item.equivadds.tools.bm.shears=Blue Matter Shears
+item.equivadds.tools.bm.hammer=Blue Matter Hammer
+item.equivadds.tools.bm.katar=Blue Katar
+item.equivadds.tools.bm.morning_star=Blue Morningstar
+
+item.equivadds.tools.pm.pickaxe=Purple Matter Pickaxe
+item.equivadds.tools.pm.axe=Purple Matter Axe
+item.equivadds.tools.pm.shovel=Purple Matter Shovel
+item.equivadds.tools.pm.sword=Purple Matter Sword
+item.equivadds.tools.pm.hoe=Purple Matter Hoe
+item.equivadds.tools.pm.shears=Purple Matter Shears
+item.equivadds.tools.pm.hammer=Purple Matter Hammer
+item.equivadds.tools.pm.katar=Purple Katar
+item.equivadds.tools.pm.morning_star=Purple Morningstar
+
+item.equivadds.tools.om.pickaxe=Orange Matter Pickaxe
+item.equivadds.tools.om.axe=Orange Matter Axe
+item.equivadds.tools.om.shovel=Orange Matter Shovel
+item.equivadds.tools.om.sword=Orange Matter Sword
+item.equivadds.tools.om.hoe=Orange Matter Hoe
+item.equivadds.tools.om.shears=Orange Matter Shears
+item.equivadds.tools.om.hammer=Orange Matter Hammer
+item.equivadds.tools.om.katar=Orange Katar
+item.equivadds.tools.om.morning_star=Orange Morningstar
+
+item.equivadds.tools.gm.pickaxe=Green Matter Pickaxe
+item.equivadds.tools.gm.axe=Green Matter Axe
+item.equivadds.tools.gm.shovel=Green Matter Shovel
+item.equivadds.tools.gm.sword=Green Matter Sword
+item.equivadds.tools.gm.hoe=Green Matter Hoe
+item.equivadds.tools.gm.shears=Green Matter Shears
+item.equivadds.tools.gm.hammer=Green Matter Hammer
+item.equivadds.tools.gm.katar=Green Katar
+item.equivadds.tools.gm.morning_star=Green Morningstar
 
 ###########
 
