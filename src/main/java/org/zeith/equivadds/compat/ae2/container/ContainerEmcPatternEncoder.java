@@ -10,6 +10,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import org.zeith.equivadds.compat.ae2.client.gui.GuiEmcPatternEncoder;
 import org.zeith.equivadds.compat.ae2.tile.TileEmcPatternEncoder;
@@ -84,6 +86,7 @@ public class ContainerEmcPatternEncoder
 	}
 	
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public Screen openScreen(Inventory inv, Component label)
 	{
 		return new GuiEmcPatternEncoder(this, inv, label);

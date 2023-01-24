@@ -2,7 +2,7 @@
 mod_id=equivadds
 archive_name=EquivalentAdditions
 mod_name=EquivalentAdditions
-mod_version=19.1.0
+mod_version=19.1.1
 
 # Maven Info
 maven_group=org.zeith.equivadds
