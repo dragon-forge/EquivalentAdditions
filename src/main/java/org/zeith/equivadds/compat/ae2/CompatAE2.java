@@ -15,7 +15,6 @@ import moze_intel.projecte.gameObjs.registries.PEBlocks;
 import moze_intel.projecte.gameObjs.registries.PEItems;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -43,6 +42,8 @@ import java.util.Locale;
 public class CompatAE2
 		extends CompatEA
 {
+	private final IInitializer init = DistExecutor.unsafeRunForDist(() -> CompatAE2Client::new, IInitializer::dummy);
+	
 	@Override
 	public void setup(IEventBus bus)
 	{
@@ -56,10 +57,7 @@ public class CompatAE2
 		GenericSlotCapacities.register(EMCKeyType.TYPE, Long.MAX_VALUE);
 		StorageCells.addCellHandler(EmcCellHandler.INSTANCE);
 		
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () ->
-		{
-			return CompatAE2Client::init;
-		});
+		init.init(bus);
 		
 		HammerLib.EVENT_BUS.addListener(this::recipes);
 	}

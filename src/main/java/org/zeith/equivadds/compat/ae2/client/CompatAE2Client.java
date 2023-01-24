@@ -11,19 +11,24 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.zeith.equivadds.compat.ae2.IInitializer;
 import org.zeith.equivadds.compat.ae2.init.ItemsEAAE2;
 import org.zeith.equivadds.compat.ae2.me.EMCKey;
 import org.zeith.equivadds.compat.ae2.me.EMCKeyType;
 import org.zeith.equivadds.compat.ae2.util.StyleManagerEA;
 
-public interface CompatAE2Client
+public class CompatAE2Client
+		implements IInitializer
 {
-	static void init()
+	public CompatAE2Client()
 	{
-		var bus = FMLJavaModLoadingContext.get().getModEventBus();
-		
+	}
+	
+	@Override
+	public void init(IEventBus bus)
+	{
 		bus.addListener((RegisterColorHandlersEvent.Item event) ->
 		{
 			for(var tier : ItemsEAAE2.Tier.values())
@@ -42,9 +47,9 @@ public interface CompatAE2Client
 		});
 	}
 	
-	static <M extends AEBaseMenu, U extends AEBaseScreen<M>> void register(MenuType<M> type,
-																		   InitScreens.StyledScreenFactory<M, U> factory,
-																		   String stylePath)
+	public static <M extends AEBaseMenu, U extends AEBaseScreen<M>> void register(MenuType<M> type,
+																				  InitScreens.StyledScreenFactory<M, U> factory,
+																				  String stylePath)
 	{
 		MenuScreens.<M, U> register(type, (menu, playerInv, title) ->
 		{
