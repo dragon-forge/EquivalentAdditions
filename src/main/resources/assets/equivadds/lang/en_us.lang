@@ -112,6 +112,7 @@ gui.equivadds.emc=EMC
 #### AE2 COMPATIBILITY ####
 
 block.equivadds.ae2.emc_synthesis_chamber=EMC Synthesis Chamber
+block.equivadds.ae2.emc_pattern_encoder=EMC Synthesis Encoder
 item.equivadds.ae2.emc_synthesis_pattern=EMC Synthesis Pattern
 item.equivadds.ae2.emc_cell_housing=ME EMC Cell Housing
 item.equivadds.ae2.emc_storage_cell_1k=1K ME EMC Storage Cell

@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import org.zeith.hammerlib.api.blocks.ICreativeTabBlock;
 import org.zeith.hammerlib.core.adapter.BlockHarvestAdapter;
+import org.zeith.hammerlib.core.adapter.TagAdapter;
 
 import java.util.List;
 
@@ -18,7 +19,13 @@ public class SimpleBlockEA
 	public SimpleBlockEA(Properties props, BlockHarvestAdapter.MineableType type, Tier tier)
 	{
 		super(props);
-		BlockHarvestAdapter.bindTool(type, tier, this);
+		
+		if(tier == null)
+		{
+			if(type != null)
+				TagAdapter.bind(type.blockTag(), this);
+		} else
+			BlockHarvestAdapter.bindTool(type, tier, this);
 	}
 	
 	@Override

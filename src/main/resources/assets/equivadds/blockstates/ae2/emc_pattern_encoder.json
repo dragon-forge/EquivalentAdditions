@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "equivadds:block/ae2/emc_pattern_encoder"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "equivadds:block/ae2/emc_pattern_encoder_bottom",
+    "side": "equivadds:block/ae2/emc_pattern_encoder_side",
+    "top": "equivadds:block/ae2/emc_pattern_encoder"
+  }
+}

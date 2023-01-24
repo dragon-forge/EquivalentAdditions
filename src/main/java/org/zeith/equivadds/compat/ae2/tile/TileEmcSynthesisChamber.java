@@ -35,6 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -77,9 +78,9 @@ public class TileEmcSynthesisChamber
 	@OnlyIn(Dist.CLIENT)
 	private AssemblerAnimationStatus animationStatus;
 	
-	public TileEmcSynthesisChamber(BlockPos pos, BlockState blockState)
+	public TileEmcSynthesisChamber(BlockEntityType<?> type, BlockPos pos, BlockState blockState)
 	{
-		super(BlocksEAAE2.EMC_SYNTHESIS_CHAMBER_TYPE, pos, blockState);
+		super(type, pos, blockState);
 		
 		this.getMainNode()
 				.setIdlePowerUsage(0.0)

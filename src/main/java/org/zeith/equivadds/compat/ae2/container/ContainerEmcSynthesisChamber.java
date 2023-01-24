@@ -1,4 +1,4 @@
-package org.zeith.equivadds.compat.ae2.menu;
+package org.zeith.equivadds.compat.ae2.container;
 
 import appeng.api.config.SecurityPermissions;
 import appeng.menu.SlotSemantics;
@@ -12,12 +12,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import org.zeith.equivadds.compat.ae2.client.GuiEmcSynthesisChamber;
+import org.zeith.equivadds.compat.ae2.client.gui.GuiEmcSynthesisChamber;
 import org.zeith.equivadds.compat.ae2.tile.TileEmcSynthesisChamber;
 import org.zeith.hammerlib.api.forge.ContainerAPI;
 import org.zeith.hammerlib.api.inv.IScreenContainer;
 
-public class MenuEmcSynthesisChamber
+public class ContainerEmcSynthesisChamber
 		extends UpgradeableMenu<TileEmcSynthesisChamber>
 		implements IProgressProvider, IScreenContainer
 {
@@ -26,7 +26,7 @@ public class MenuEmcSynthesisChamber
 	@GuiSync(4)
 	public int craftProgress = 0;
 	
-	public MenuEmcSynthesisChamber(int id, Inventory playerInv, TileEmcSynthesisChamber be)
+	public ContainerEmcSynthesisChamber(int id, Inventory playerInv, TileEmcSynthesisChamber be)
 	{
 		super(ContainerAPI.TILE_CONTAINER, id, playerInv, be);
 		this.emcSynthesisChamber = be;

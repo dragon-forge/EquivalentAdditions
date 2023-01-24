@@ -146,5 +146,12 @@ public class CompatAE2
 				.map('m', AEBlocks.MOLECULAR_ASSEMBLER)
 				.map('t', PEBlocks.TRANSMUTATION_TABLE)
 				.register();
+		
+		e.shaped().result(BlocksEAAE2.EMC_PATTERN_ENCODER)
+				.shape("mtm", "mwm", "mmm")
+				.map('m', PEItems.DARK_MATTER)
+				.map('w', AEBlocks.CELL_WORKBENCH)
+				.map('t', PEBlocks.TRANSMUTATION_TABLE)
+				.register();
 	}
 }

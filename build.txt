@@ -6,7 +6,7 @@ mod_version=19.1.0
 
 # Maven Info
 maven_group=org.zeith.equivadds
-hl_version=19.3.53
+hl_version=19.3.54
 
 # MC Info
 mc_version=1.19.2
