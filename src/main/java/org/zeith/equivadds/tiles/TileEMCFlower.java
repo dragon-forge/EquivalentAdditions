@@ -22,10 +22,14 @@ import org.zeith.equivadds.api.EmcFlower;
 import org.zeith.equivadds.tiles.relays.TileCustomRelay;
 import org.zeith.equivadds.util.EMCStorage;
 import org.zeith.hammerlib.api.io.NBTSerializable;
+import org.zeith.hammerlib.net.HLTargetPoint;
+import org.zeith.hammerlib.net.Network;
+import org.zeith.hammerlib.net.packets.SyncTileEntityPacket;
 import org.zeith.hammerlib.tiles.TileSyncableTickable;
 import org.zeith.hammerlib.tiles.tooltip.own.ITooltip;
 import org.zeith.hammerlib.tiles.tooltip.own.ITooltipProvider;
 import org.zeith.hammerlib.util.java.Cast;
+import org.zeith.hammerlib.util.mcf.NormalizedTicker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,35 +46,32 @@ public class TileEMCFlower
 	@NBTSerializable("unproc_emc")
 	private double unprocessedEMC;
 	
+	protected final NormalizedTicker ticker = NormalizedTicker.create(this::updateEmc);
+	
 	public TileEMCFlower(BlockEntityType<?> type, EmcFlower.FlowerProperties props, BlockPos pos, BlockState state)
 	{
 		super(type, pos, state);
 		this.props = props;
 		
-		this.storage = new EMCStorage(props.storage())
-		{
-			@Override
-			public void storedEmcChanged()
-			{
-				super.storedEmcChanged();
-				isDirty = true;
-			}
-		};
-		
-		dispatcher.registerProperty("me", storage.emcSync);
+		this.storage = new EMCStorage(props.storage());
+		this.storage.onEmcChanged = () -> isDirty = true;
 	}
 	
 	@Override
 	public void update()
 	{
-		updateEmc();
+		// This prevents any speed-ups by ensuring only one tick happens per one server tick.
+		// This tile does not need any extra updates besides the main update,
+		// since otherwise we may cause unwanted lag.
+		// We compensate extra ticks by multiplying the EMC production by the amount of suppressed ticks.
+		ticker.tick(level);
 	}
 	
-	private void updateEmc()
+	private void updateEmc(int ticks)
 	{
 		if(!storage.hasMaxedEmc())
 		{
-			this.unprocessedEMC += (double) this.props.genRate() * ((float) this.getSunLevel() / 320.0F);
+			this.unprocessedEMC += (double) this.props.genRate() * ((float) this.getSunLevel() / 320.0F) * ticks;
 			if(this.unprocessedEMC >= 1.0)
 				this.unprocessedEMC -= (double) storage.insertEmc((long) this.unprocessedEMC, IEmcStorage.EmcAction.EXECUTE);
 		}
@@ -81,6 +82,12 @@ public class TileEMCFlower
 			this.sendToAllAcceptors(toSend);
 			this.sendRelayBonus();
 		}
+	}
+	
+	@Override
+	public void syncNow()
+	{
+		Network.sendToArea(new HLTargetPoint(worldPosition, 10, level), new SyncTileEntityPacket(this, true));
 	}
 	
 	public int getSunLevel()

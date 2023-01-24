@@ -1,13 +1,13 @@
 package org.zeith.equivadds.tiles.collectors;
 
 import moze_intel.projecte.api.capabilities.PECapabilities;
+import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
 import moze_intel.projecte.api.capabilities.item.IItemEmcHolder;
 import moze_intel.projecte.capability.managing.*;
 import moze_intel.projecte.emc.FuelMapper;
 import moze_intel.projecte.gameObjs.block_entities.*;
 import moze_intel.projecte.gameObjs.container.slots.SlotPredicates;
-import moze_intel.projecte.utils.EMCHelper;
-import moze_intel.projecte.utils.ItemHelper;
+import moze_intel.projecte.utils.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -18,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.util.NonNullLazy;
 import net.minecraftforge.items.*;
@@ -29,9 +30,10 @@ import org.zeith.equivadds.container.ContainerCustomCollector;
 import org.zeith.equivadds.init.EnumCollectorTiersEA;
 import org.zeith.equivadds.tiles.relays.TileCustomRelay;
 import org.zeith.hammerlib.util.java.Cast;
+import org.zeith.hammerlib.util.mcf.NormalizedTicker;
 
 import javax.annotation.Nonnull;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class TileCustomCollector
 		extends CapabilityEmcBlockEntity
@@ -85,16 +87,23 @@ public abstract class TileCustomCollector
 	
 	public static void tickServer(Level level, BlockPos pos, BlockState state, TileCustomCollector self)
 	{
-		if(self.needsCompacting)
+		self.serverTicker.tick(level);
+	}
+	
+	public final NormalizedTicker serverTicker = NormalizedTicker.create(this::serverTick);
+	
+	public void serverTick(int suppressed)
+	{
+		if(needsCompacting)
 		{
-			ItemHelper.compactInventory(self.toSort);
-			self.needsCompacting = false;
+			ItemHelper.compactInventory(toSort);
+			needsCompacting = false;
 		}
 		
-		self.checkFuelOrKlein();
-		self.updateEmc();
-		self.rotateUpgraded();
-		self.updateComparators();
+		checkFuelOrKlein();
+		updateEmc(suppressed);
+		rotateUpgraded();
+		updateComparators();
 	}
 	
 	@Override
@@ -179,11 +188,11 @@ public abstract class TileCustomCollector
 		}
 	}
 	
-	private void updateEmc()
+	private void updateEmc(int suppressed)
 	{
 		if(!this.hasMaxedEmc())
 		{
-			this.unprocessedEMC += (float) this.emcGen * ((float) this.getSunLevel() / 320.0F);
+			this.unprocessedEMC += (float) this.emcGen * ((float) this.getSunLevel() / 320.0F) * suppressed;
 			if(this.unprocessedEMC >= 1.0)
 			{
 				this.unprocessedEMC -= (double) this.forceInsertEmc((long) this.unprocessedEMC, EmcAction.EXECUTE);
@@ -197,40 +206,44 @@ public abstract class TileCustomCollector
 			ItemStack upgrading = this.getUpgrading();
 			if(this.hasChargeableItem)
 			{
-				upgrading.getCapability(PECapabilities.EMC_HOLDER_ITEM_CAPABILITY).ifPresent((emcHolder) ->
-				{
-					long actualInserted = emcHolder.insertEmc(upgrading, Math.min(this.getStoredEmc(), this.emcGen), EmcAction.EXECUTE);
-					this.forceExtractEmc(actualInserted, EmcAction.EXECUTE);
-				});
+				for(int i = 0; i < suppressed; ++i)
+					upgrading.getCapability(PECapabilities.EMC_HOLDER_ITEM_CAPABILITY).ifPresent((emcHolder) ->
+					{
+						long actualInserted = emcHolder.insertEmc(upgrading, Math.min(this.getStoredEmc(), this.emcGen), EmcAction.EXECUTE);
+						this.forceExtractEmc(actualInserted, EmcAction.EXECUTE);
+					});
 			} else if(this.hasFuel)
 			{
-				if(FuelMapper.getFuelUpgrade(upgrading).isEmpty())
+				for(int i = 0; i < suppressed; ++i)
 				{
-					this.auxSlots.setStackInSlot(0, ItemStack.EMPTY);
-				}
-				
-				ItemStack result = this.getLock().isEmpty() ? FuelMapper.getFuelUpgrade(upgrading) : this.getLock().copy();
-				long upgradeCost = EMCHelper.getEmcValue(result) - EMCHelper.getEmcValue(upgrading);
-				if(upgradeCost >= 0L && this.getStoredEmc() >= upgradeCost)
-				{
-					ItemStack upgrade = this.getUpgraded();
-					if(this.getUpgraded().isEmpty())
+					if(FuelMapper.getFuelUpgrade(upgrading).isEmpty())
 					{
-						this.forceExtractEmc(upgradeCost, EmcAction.EXECUTE);
-						this.auxSlots.setStackInSlot(1, result);
-						upgrading.shrink(1);
-					} else if(result.getItem() == upgrade.getItem() && upgrade.getCount() < upgrade.getMaxStackSize())
+						this.auxSlots.setStackInSlot(0, ItemStack.EMPTY);
+					}
+					
+					ItemStack result = this.getLock().isEmpty() ? FuelMapper.getFuelUpgrade(upgrading) : this.getLock().copy();
+					long upgradeCost = EMCHelper.getEmcValue(result) - EMCHelper.getEmcValue(upgrading);
+					if(upgradeCost >= 0L && this.getStoredEmc() >= upgradeCost)
 					{
-						this.forceExtractEmc(upgradeCost, EmcAction.EXECUTE);
-						this.getUpgraded().grow(1);
-						upgrading.shrink(1);
-						this.auxSlots.onContentsChanged(1);
+						ItemStack upgrade = this.getUpgraded();
+						if(this.getUpgraded().isEmpty())
+						{
+							this.forceExtractEmc(upgradeCost, EmcAction.EXECUTE);
+							this.auxSlots.setStackInSlot(1, result);
+							upgrading.shrink(1);
+						} else if(result.getItem() == upgrade.getItem() && upgrade.getCount() < upgrade.getMaxStackSize())
+						{
+							this.forceExtractEmc(upgradeCost, EmcAction.EXECUTE);
+							this.getUpgraded().grow(1);
+							upgrading.shrink(1);
+							this.auxSlots.onContentsChanged(1);
+						}
 					}
 				}
 			} else
 			{
 				long toSend = this.getStoredEmc() < this.emcGen ? this.getStoredEmc() : this.emcGen;
-				this.sendToAllAcceptors(toSend);
+				this.sendToAllAcceptors(toSend, suppressed);
 				this.sendRelayBonus();
 			}
 		}
@@ -281,6 +294,56 @@ public abstract class TileCustomCollector
 		{
 			return -1.0;
 		}
+	}
+	
+	@Range(from = 0, to = Long.MAX_VALUE)
+	protected long sendToAllAcceptors(long emc, int suppressed)
+	{
+		if(level == null || !canProvideEmc())
+		{
+			//If we cannot provide emc then just return
+			return 0;
+		}
+		emc = Math.min(getEmcExtractLimit() * suppressed, emc);
+		long sentEmc = 0;
+		List<IEmcStorage> targets = new ArrayList<>();
+		for(Direction dir : Direction.values())
+		{
+			BlockPos neighboringPos = worldPosition.relative(dir);
+			//Make sure the neighboring block is loaded as if we are on a chunk border on the edge of loaded chunks this may not be the case
+			if(level.isLoaded(neighboringPos))
+			{
+				BlockEntity neighboringBE = WorldHelper.getBlockEntity(level, neighboringPos);
+				if(neighboringBE != null)
+				{
+					neighboringBE.getCapability(PECapabilities.EMC_STORAGE_CAPABILITY, dir.getOpposite()).ifPresent(theirEmcStorage ->
+					{
+						if(!isRelay() || !theirEmcStorage.isRelay())
+						{
+							//If they are both relays don't add the pairing so as to prevent thrashing
+							if(theirEmcStorage.insertEmc(1, EmcAction.SIMULATE) > 0)
+							{
+								//If they would be wiling to accept any Emc then we consider them to be an "acceptor"
+								targets.add(theirEmcStorage);
+							}
+						}
+					});
+				}
+			}
+		}
+		
+		if(!targets.isEmpty())
+		{
+			long emcPer = emc / targets.size();
+			for(IEmcStorage target : targets)
+			{
+				long emcCanProvide = extractEmc(emcPer, EmcAction.SIMULATE);
+				long acceptedEmc = target.insertEmc(emcCanProvide, EmcAction.EXECUTE);
+				extractEmc(acceptedEmc, EmcAction.EXECUTE);
+				sentEmc += acceptedEmc;
+			}
+		}
+		return sentEmc;
 	}
 	
 	public int getSunLevel()

@@ -33,6 +33,6 @@ side = "BOTH"
 [[dependencies.equivadds]]
 modId = "hammerlib"
 mandatory = true
-versionRange = "[19.3.54,)"
+versionRange = "[19.3.55,)"
 ordering = "NONE"
 side = "BOTH"

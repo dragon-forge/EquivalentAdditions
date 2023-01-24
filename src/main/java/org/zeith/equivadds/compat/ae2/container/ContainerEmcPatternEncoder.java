@@ -5,6 +5,7 @@ import appeng.core.definitions.AEItems;
 import moze_intel.projecte.utils.EMCHelper;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -103,7 +104,7 @@ public class ContainerEmcPatternEncoder
 		return false;
 	}
 	
-	public static class EMCAbleItemSlot
+	public class EMCAbleItemSlot
 			extends Slot
 	{
 		public EMCAbleItemSlot(Container container, int id, int x, int y)
@@ -114,10 +115,8 @@ public class ContainerEmcPatternEncoder
 		@Override
 		public boolean mayPlace(ItemStack item)
 		{
-			if(EMCHelper.getEmcValue(item) > 0L)
-			{
+			if(tile.getLevel() instanceof ServerLevel sl && EMCHelper.getEmcValue(item) > 0L)
 				set(item.getItem().getDefaultInstance());
-			}
 			
 			return false;
 		}
@@ -125,7 +124,9 @@ public class ContainerEmcPatternEncoder
 		@Override
 		public boolean mayPickup(Player player)
 		{
-			set(ItemStack.EMPTY);
+			if(tile.getLevel() instanceof ServerLevel sl)
+				set(ItemStack.EMPTY);
+			
 			return false;
 		}
 	}

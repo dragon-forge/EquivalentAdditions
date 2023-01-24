@@ -23,11 +23,14 @@ import org.zeith.equivadds.net.PacketSyncEMC;
 import org.zeith.equivadds.util.EMCHelper;
 import org.zeith.equivadds.util.EMCStorage;
 import org.zeith.hammerlib.api.io.NBTSerializable;
+import org.zeith.hammerlib.net.HLTargetPoint;
 import org.zeith.hammerlib.net.Network;
+import org.zeith.hammerlib.net.packets.SyncTileEntityPacket;
 import org.zeith.hammerlib.tiles.TileSyncableTickable;
 import org.zeith.hammerlib.tiles.tooltip.own.ITooltip;
 import org.zeith.hammerlib.tiles.tooltip.own.ITooltipProvider;
 import org.zeith.hammerlib.util.java.Cast;
+import org.zeith.hammerlib.util.mcf.NormalizedTicker;
 
 import javax.annotation.Nonnull;
 import java.math.BigInteger;
@@ -50,33 +53,58 @@ public class TileEMCProxy
 	@NBTSerializable
 	public final EMCStorage internal = new EMCStorage();
 	
+	protected final NormalizedTicker normTick = NormalizedTicker.create(this::updateNorm);
+	protected final NormalizedTicker clientTick = NormalizedTicker.create(this::clientUpdateNorm);
+	
 	protected boolean emcChanged;
 	
 	public TileEMCProxy(BlockPos pos, BlockState state)
 	{
 		super(TilesEA.EMC_PROXY, pos, state);
-		dispatcher.registerProperty("me", internal.emcSync);
+		internal.onEmcChanged = () -> emcChanged = true;
 	}
 	
 	@Override
-	public void update()
+	public void serverTick()
 	{
-		if(isOnServer())
+		// This prevents any speed-ups by ensuring only one tick happens per one server tick.
+		// This tile does not need any extra updates besides the main update,
+		// since otherwise we may cause unwanted lag.
+		normTick.tick(level);
+	}
+	
+	@Override
+	public void clientTick()
+	{
+		clientTick.tick(level);
+	}
+	
+	public void updateNorm(int suppressed)
+	{
+		long need = getNeededEmc();
+		if(need > 0)
 		{
-			long need = getNeededEmc();
-			if(need > 0)
-			{
-				need = EMCHelper.pullEMC(need, level, worldPosition, EmcAction.EXECUTE);
-				internal.emc += need;
-				if(need > 0) internal.storedEmcChanged();
-			}
-			
-			knowledge = updateKnowledge();
-			if((knowledge == null) == hasKnowledge || atTickRate(20))
-				sync();
-			hasKnowledge = knowledge != null;
-		} else if(atTickRate(10))
+			need = EMCHelper.pullEMC(need, level, worldPosition, EmcAction.EXECUTE);
+			internal.emc += need;
+			if(need > 0) internal.storedEmcChanged();
+		}
+		
+		knowledge = updateKnowledge();
+		if((knowledge == null) == hasKnowledge || normTick.atTickRate(20))
+			sync();
+		hasKnowledge = knowledge != null;
+	}
+	
+	public void clientUpdateNorm(int suppressed)
+	{
+		if(clientTick.atTickRate(10))
 			setTooltipDirty(true);
+	}
+	
+	@Override
+	public void syncNow()
+	{
+		Network.sendToArea(new HLTargetPoint(worldPosition, 10, level), new SyncTileEntityPacket(this, true));
 	}
 	
 	protected IKnowledgeProvider updateKnowledge()
@@ -87,7 +115,11 @@ public class TileEMCProxy
 			if(mp != null)
 			{
 				username = mp.getGameProfile().getName();
-				IKnowledgeProvider know = mp.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY, null).orElse(null);
+				
+				IKnowledgeProvider know = mp.getCapability(PECapabilities.KNOWLEDGE_CAPABILITY, null)
+						.resolve()
+						.orElse(null);
+				
 				if(know != null)
 				{
 					if(internal.emc > 0)
@@ -100,9 +132,10 @@ public class TileEMCProxy
 					if(emcChanged)
 					{
 						emcChanged = false;
-						Network.sendTo(new PacketSyncEMC(know.getEmc()), mp);
+						PacketSyncEMC.queueEmcSync(owner);
 					}
 				}
+				
 				return know;
 			}
 		}

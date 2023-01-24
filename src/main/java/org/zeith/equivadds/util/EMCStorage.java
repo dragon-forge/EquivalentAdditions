@@ -4,8 +4,6 @@ import moze_intel.projecte.api.capabilities.block_entity.IEmcStorage;
 import org.jetbrains.annotations.Range;
 import org.zeith.hammerlib.api.io.IAutoNBTSerializable;
 import org.zeith.hammerlib.api.io.NBTSerializable;
-import org.zeith.hammerlib.net.properties.PropertyLong;
-import org.zeith.hammerlib.util.java.DirectStorage;
 
 public class EMCStorage
 		implements IEmcStorage, IAutoNBTSerializable
@@ -14,6 +12,10 @@ public class EMCStorage
 	public long emc;
 	
 	public final long maxEMC;
+	
+	public Runnable onEmcChanged = () ->
+	{
+	};
 	
 	public EMCStorage()
 	{
@@ -24,8 +26,6 @@ public class EMCStorage
 	{
 		this.maxEMC = maxEMC;
 	}
-	
-	public final PropertyLong emcSync = new PropertyLong(DirectStorage.create(v -> emc = v, () -> emc));
 	
 	@Override
 	public @Range(from = 0L, to = Long.MAX_VALUE) long getStoredEmc()
@@ -46,7 +46,7 @@ public class EMCStorage
 		if(action.execute())
 		{
 			this.emc -= toRemove;
-			this.storedEmcChanged();
+			storedEmcChanged();
 		}
 		return toRemove;
 	}
@@ -58,13 +58,13 @@ public class EMCStorage
 		if(action.execute())
 		{
 			this.emc += toAdd;
-			this.storedEmcChanged();
+			storedEmcChanged();
 		}
 		return toAdd;
 	}
 	
 	public void storedEmcChanged()
 	{
-		emcSync.markChanged(true);
+		onEmcChanged.run();
 	}
 }

@@ -2,11 +2,11 @@
 mod_id=equivadds
 archive_name=EquivalentAdditions
 mod_name=EquivalentAdditions
-mod_version=19.1.1
+mod_version=19.1.2
 
 # Maven Info
 maven_group=org.zeith.equivadds
-hl_version=19.3.54
+hl_version=19.3.55
 
 # MC Info
 mc_version=1.19.2

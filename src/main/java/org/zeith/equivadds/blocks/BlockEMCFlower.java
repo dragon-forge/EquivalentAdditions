@@ -110,7 +110,7 @@ public class BlockEMCFlower
 	@Override
 	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type)
 	{
-		return BlockAPI.ticker();
+		return BlockAPI.ticker(level);
 	}
 	
 	@Override
