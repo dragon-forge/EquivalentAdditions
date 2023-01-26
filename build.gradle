@@ -234,6 +234,7 @@ curseforge {
         }
         relations {
             requiredDependency 'Hammer-Lib'
+            requiredDependency 'ProjectE'
         }
     }
 }
